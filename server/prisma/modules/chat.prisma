@@ -1,0 +1,24 @@
+// ---------------------------------------
+//  Chat Bot Models
+// ---------------------------------------
+
+model ChatBot {
+  id          String            @id @default(uuid())
+  name        String            @unique
+  triggerName String?
+  responses   ChatBotResponse[]
+  dialogs     Dialog[]          @relation("ChatBotDialogs")
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model ChatBotResponse {
+  id        String   @id @default(uuid())
+  chatBotId String
+  chatBot   ChatBot  @relation(fields: [chatBotId], references: [id])
+  pattern   String
+  replies   Json // an array of alternate string replies
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

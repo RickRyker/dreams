@@ -1,0 +1,1700 @@
+enum AttackType {
+  MELEE
+  RANGED
+  MAGIC
+}
+
+enum EffectType {
+  BUFF
+  DEBUFF
+  STUN
+  DOT
+  HOT
+  HASTE
+  SLOW
+  TAUNT
+  SHIELD
+  OTHER
+}
+
+enum ElementType {
+  NONE
+  AIR
+  DEATH
+  EARTH
+  FIRE
+  ICE
+  LIGHTNING
+  NATURE
+  POISON
+  SHADOW
+  SPIRIT
+  WATER
+}
+
+enum ParticipantType {
+  MONSTER
+  PET
+  PLAYER
+}
+
+enum DialogActionType {
+  ADD_XP
+  ADD_GOLD
+  ADD_ITEM
+  REMOVE_ITEM
+  ADD_RECIPE
+  ADD_SKILL
+  ADD_STAT
+  SET_VARIABLE
+  ADD_VALUE_TO_VARIABLE
+  MULTIPLY_VARIABLE
+  ADD_VARIABLE_TO_VARIABLE
+  SET_VARIABLE_TO_CURRENT_TIME
+  PUT_CURRENT_DATE_IN_VARIABLE
+  PUT_CURRENT_TIME_IN_VARIABLE
+  CLEAR_VARIABLE
+  START_QUEST
+  COMPLETE_QUEST
+  FAIL_QUEST
+  RESET_QUEST
+  MOVE_PLAYER_TO_MAP
+  MOVE_PLAYER_TO_COORDS
+  RETURN_PLAYER_TO_PREVIOUS_LOCATION
+  SET_RESPAWN_POINT
+  PREPARE_COMBAT_MONSTER
+  START_COMBAT
+  START_COMBAT_GROUP
+  APPLY_EFFECT
+  REMOVE_EFFECT
+}
+
+enum DialogConditionOperator {
+  EQ
+  NE
+  GT
+  LT
+  GTE
+  LTE
+  CONTAINS
+  NOT_CONTAINS
+  STARTS_WITH
+  ENDS_WITH
+}
+
+enum DialogDisplayMode {
+  FULLSCREEN
+  OVERHEAD
+}
+
+enum EventType {
+  WORLD
+  HOLIDAY
+  SEASONAL
+  BOSS
+}
+
+enum RewardType {
+  ITEM
+  XP_BOOST
+  DROP_RATE
+  CURRENCY
+  COSMETIC
+  RECIPE
+  QUEST
+  TITLE
+}
+
+enum GuildLogActionType {
+  JOINED
+  DONATED
+  BORROWED
+  WITHDREW
+  PROMOTED
+  DEMOTED
+  KICKED
+}
+
+enum GuildLogType {
+  MEMBERS
+  TREASURY
+}
+
+enum GuildPermissionType {
+  WITHDRAW_ITEMS
+  WITHDRAW_GOLD
+  INVITE
+  TAG_ITEMS
+  EDIT_DESCRIPTION
+  PROMOTE
+  DEMOTE
+  KICK
+  UNTAG_ITEMS
+  MANAGE_RANKS
+}
+
+enum ContainerType {
+  BANK
+  CHEST
+  GUILD
+  MAIL
+  PLAYER
+  STORE
+}
+
+enum ItemActionType {
+  NONE
+  DRINK
+  EAT
+  READ
+  USE
+}
+
+enum ItemQualityType {
+  RUINED
+  POOR
+  STANDARD
+  FINE
+  PRISTINE
+}
+
+enum ItemType {
+  NONE
+  ARMOR
+  ARROW
+  AXE
+  BELT
+  BLUEPRINT
+  BOLT
+  BOOT
+  BOW
+  BULLET
+  CONTAINER
+  CLUB
+  CROP
+  CROSSBOW
+  DRINK
+  FOOD
+  FURNITURE
+  GEM
+  GLOVE
+  HAMMER
+  HAT
+  HERB
+  INGOT
+  INGREDIENT
+  INSTRUMENT
+  KNIFE
+  MATERIAL
+  MEAL
+  MEAT
+  ORE
+  PAINT
+  PENDANT
+  PET
+  PIGMENT
+  PLANK
+  POTION
+  REAGENT
+  RECIPE
+  REMAIN
+  RING
+  SHIELD
+  SLUG
+  SPEAR
+  STAVE
+  SWORD
+  TOOL
+}
+
+enum TerrainType {
+  NONE
+  CAVE
+  CLIFF
+  CLOUD
+  DIRT
+  GRASS
+  ICE
+  LAVA
+  OCEAN
+  ROCK
+  SAND
+  SKY
+  SNOW
+  SNOW_CLIFF
+  SWAMP
+  VOID
+  WATER
+}
+
+enum WildLifeType {
+  BEE
+  BIRD
+  BUTTERFLY
+}
+
+enum TradeDirection {
+  FROM
+  TO
+}
+
+enum TradeStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+enum PetFamilyType {
+  BASIC
+  BEAST
+  ELEMENTAL
+  FLYING
+  LEGENDARY
+  SPIRIT
+  MOUNT
+  WIND
+}
+
+enum AchievementCategory {
+  COMBAT
+  CRAFTING
+  EXPLORATION
+  SOCIAL
+}
+
+enum AchievementTier {
+  BRONZE
+  SILVER
+  GOLD
+}
+
+enum GenderType {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum StatType {
+  NONE
+  STR
+  DEX
+  CON
+  INT
+  WIS
+  CHA
+  SPD
+  HP
+  MP
+  AC
+  DR
+  SR
+  FORT
+  REF
+  WILL
+  TH
+}
+
+enum TitleDisplayType {
+  PREFIX
+  SUFFIX
+}
+
+enum WeaponType {
+  NONE
+  AXES
+  BOWS
+  CROSSBOWS
+  HANDS
+  KNIVES
+  PETS
+  SCROLLS
+  SWORDS
+  TOOLS
+}
+
+enum QuestStatusType {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum BonusCategoryType {
+  NONE
+  VITALITY
+  ENDURANCE
+  FOCUS
+  WARMTH
+  HEAT_RESISTANCE
+  FORTITUDE
+  SPEED
+  CHARISMA
+  RECOVERY
+  LUCK
+}
+
+enum IngredientRarityType {
+  COMMON
+  UNCOMMON
+  RARE
+  LEGENDARY
+}
+
+enum MapEventActionType {
+  TRANSITION
+  MESSAGE
+  OVERLAP_TILE
+}
+
+enum MapEventLogicOperator {
+  AND
+  OR
+  NOT
+}
+
+enum MaterialType {
+  BONE
+  CERAMIC
+  CLOTH
+  DUST
+  ESSENCE
+  FIBER
+  GAS
+  GLASS
+  GRAIN
+  LEATHER
+  LIQUID
+  MEAT
+  METAL
+  MINERAL
+  ORGANIC
+  PLANT
+  STONE
+  WOOD
+  NONE
+  OTHER
+  UNKNOWN
+}
+
+enum MessageType {
+  ADMIN
+  BOT
+  CHAT
+  COMBAT
+  ERROR
+  NPC
+  PLAYER
+  QUEST
+  SYSTEM
+  WHISPER
+}
+
+enum ObjectType {
+  NONE
+  BOULDER
+  BRIDGE
+  BUILDING
+  BUSH
+  CAVE
+  DECORATION
+  FURNITURE
+  HILL
+  NPC
+  RIVER
+  ROAD
+  STREAM
+  TREES
+  WALL
+}
+
+enum QualityType {
+  F
+  E
+  D
+  C
+  B
+  A
+  S
+  SS
+  SSS
+  M
+}
+
+enum SkillType {
+  ALCHEMY
+  ARMOR
+  AXE
+  BOW
+  BREWING
+  COOKING
+  CRAFTING
+  CROSSBOW
+  ENCHANTING
+  ENGRAVING
+  HAMMER
+  HUSBANDRY
+  KNIFE
+  LEATHERWORKING
+  MAGIC
+  SCRIBING
+  SLING
+  SMITHING
+  SOCIAL
+  STAFF
+  SWORD
+  TOOL
+  TRAINING
+  WAND
+  WEAPON
+  WOODWORKING
+}
+
+enum SlotType {
+  NONE
+  WEAPON
+  OFFHAND
+  ARMOR
+  HEAD
+  NECK
+  HANDS
+  WAIST
+  LEGS
+  FEET
+  RING1
+  RING2
+  EARS
+  EYES
+  FACE
+  BACK
+}
+
+enum StatusType {
+  PENDING
+  APPROVED
+  DENIED
+}
+
+enum WeaponModeType {
+  MELEE
+  RANGED
+}
+
+enum WorldConfigSettingType {
+  BUFFER_SIZE
+  MAINTENANCE_START
+  LOG_SIZE_LIMIT_BYTES
+  LOG_PRUNE_DAYS
+  IS_MAINTENANCE_MODE
+  BYPASS_MAINTENANCE
+  SIMILARITY_THRESHOLD
+  TUTORIAL_MAP
+  TUTORIAL_START_X
+  TUTORIAL_START_Y
+  GHOST_DURATION_MINUTES
+  MIN_LEVEL_CREATE_GUILD
+  MIN_LEVEL_JOIN_GUILD
+}
+
+type Account {
+  id: String!
+  email: String!
+  passwordHash: String!
+  emailVerifiedAt: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type AccountAuthentication {
+  id: String!
+  accountId: String!
+  provider: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Avatar {
+  id: String!
+  accountId: String!
+  name: String!
+  description: String!
+  s3Key: String!
+  isApproved: Boolean!
+  isFree: Boolean!
+  creatorId: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Device {
+  id: String!
+  accountId: String!
+  name: String!
+  lastIp: String!
+  trusted: Boolean!
+  lastUsed: String!
+  createdAt: String!
+}
+
+type EmailChangeToken {
+  id: String!
+  token: String!
+  accountId: String!
+  email: String!
+  createdAt: String!
+  expiresAt: String!
+}
+
+type MfaSecret {
+  id: String!
+  accountId: String!
+  secret: String!
+  enabled: Boolean!
+  createdAt: String!
+}
+
+type PasswordResetToken {
+  id: String!
+  token: String!
+  accountId: String!
+  createdAt: String!
+  expiresAt: String!
+}
+
+type RateLimit {
+  id: String!
+  ip: String!
+  endpoint: String!
+  timestamp: String!
+}
+
+type RefreshToken {
+  id: String!
+  tokenHash: String!
+  accountId: String!
+  createdAt: String!
+  expiresAt: String!
+}
+
+type Session {
+  id: String!
+  sid: String!
+  data: String!
+  expiresAt: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type VerificationToken {
+  id: String!
+  token: String!
+  accountId: String!
+  email: String!
+  expiresAt: String!
+  used: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type AdminActionLog {
+  id: String!
+  gmId: String!
+  targetId: String
+  actionType: String!
+  payload: JSON!
+  createdAt: String!
+}
+
+type Ban {
+  id: String!
+  playerId: String!
+  reason: String!
+  expiresAt: String
+  createdById: String!
+  createdAt: String!
+}
+
+type Mute {
+  id: String!
+  playerId: String!
+  reason: String!
+  expiresAt: String
+  createdAt: String!
+  createdById: String!
+}
+
+type EconomySnapshot {
+  id: String!
+  takenAt: String!
+  totalGold: Int!
+  totalItems: Int!
+  activeAuctions: Int!
+  activeListings: Int!
+  metadata: JSON
+}
+
+type HeatmapEvent {
+  id: String!
+  playerId: String!
+  mapId: String!
+  x: Int!
+  y: Int!
+  eventType: String!
+  createdAt: String!
+}
+
+type PlayerSessionLog {
+  id: String!
+  playerId: String!
+  loginAt: String!
+  logoutAt: String
+  ipAddress: String
+  clientVersion: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type ServerMetric {
+  id: String!
+  name: String!
+  value: Float!
+  tags: JSON
+  recordedAt: String!
+}
+
+type ChatBot {
+  id: String!
+  name: String!
+  triggerName: String
+  isActive: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type ChatBotResponse {
+  id: String!
+  chatBotId: String!
+  pattern: String!
+  replies: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type CombatEffect {
+  id: String!
+  spellSlug: String!
+  participantId: String!
+  playerId: String
+  element: ElementType
+  type: EffectType!
+  magnitude: Int!
+  expired: Boolean!
+  expiresAt: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type CombatLog {
+  id: String!
+  combatId: String!
+  type: String!
+  actorId: String
+  actorType: ParticipantType
+  targetId: String
+  message: String!
+  data: JSON
+  seq: Int!
+  createdAt: String!
+}
+
+type CombatLoot {
+  id: String!
+  participantId: String!
+  itemId: String!
+  qty: Int!
+  createdAt: String!
+}
+
+type CombatParticipant {
+  id: String!
+  combatId: String!
+  participantType: ParticipantType!
+  playerId: String
+  petId: String
+  monsterId: String
+  corpseName: String
+  tier: Int!
+  hp: Int!
+  maxHp: Int!
+  mp: Int!
+  maxMp: Int!
+  strength: Int!
+  dexterity: Int!
+  intelligence: Int!
+  charisma: Int!
+  critChance: Float!
+  critDamage: Float!
+  critResistance: Float!
+  damageReduction: Float!
+  spellResistance: Float!
+  abilityCooldowns: JSON
+  initiative: Int!
+  x: Int!
+  y: Int!
+  hasActed: Boolean!
+  isAlive: Boolean!
+  isInvisible: Boolean!
+  gold: Int!
+  isLooted: Boolean!
+  gcdSeconds: Int!
+  globalCooldownUntil: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type CombatSession {
+  id: String!
+  mapId: String!
+  turnPhase: ParticipantType!
+  activeTurnId: String
+  toHitBonus: Float!
+  isActive: Boolean!
+  startTime: String!
+  turnTimeoutSeconds: Int!
+  roundNumber: Int!
+  lastTurnAt: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type CombatThreat {
+  id: String!
+  combatId: String!
+  monsterId: String!
+  targetId: String!
+  value: Int!
+}
+
+type Dialog {
+  id: String!
+  title: String!
+  displayMode: DialogDisplayMode!
+  chatBotId: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type DialogAction {
+  id: String!
+  pageId: String
+  sequence: Int!
+  action: DialogActionType!
+  questId: String
+  variable1: String
+  variable2: String
+  text: String
+  numberAmt: Int
+  floatAmt: Float
+  slug: String
+  skill: String
+  mapId: String
+  x: Int
+  y: Int
+  message: String
+  sound: String
+  music: String
+  cutscene: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type DialogCondition {
+  id: String!
+  partId: String
+  actionId: String
+  linkId: String
+  questId: String!
+  variable: String!
+  operator: DialogConditionOperator!
+  value: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type DialogLink {
+  id: String!
+  pageId: String
+  sequence: Int
+  dialogId: String
+  mapId: String
+  x: Int
+  y: Int
+  leave: Boolean
+  createdAt: String!
+  updatedAt: String!
+}
+
+type DialogPage {
+  id: String!
+  dialogId: String!
+  sequence: Int!
+  imageUrl: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type DialogPart {
+  id: String!
+  pageId: String
+  sequence: Int!
+  text: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Event {
+  id: String!
+  slug: String!
+  name: String!
+  description: String!
+  type: EventType!
+  isHoliday: Boolean!
+  startsAt: String!
+  endsAt: String!
+  isActive: Boolean!
+  createdById: String!
+}
+
+type EventParticipation {
+  id: String!
+  eventId: String!
+  playerId: String!
+  progress: JSON!
+  completed: Boolean!
+  rewardClaimed: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type EventReward {
+  id: String!
+  eventId: String!
+  rewardType: RewardType!
+  title: String
+  itemId: String
+  recipeId: String
+  amount: Int
+  value: Float
+}
+
+type Guild {
+  id: String!
+  name: String!
+  description: String!
+  reputation: Int!
+  founderId: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type GuildLog {
+  id: String!
+  guildId: String!
+  type: GuildLogType!
+  action: GuildLogActionType!
+  playerId: String!
+  details: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type GuildMember {
+  id: String!
+  guildId: String!
+  playerId: String!
+  rankLevel: Int!
+  rankId: String!
+  credits: Int!
+  joinAt: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type GuildRank {
+  id: String!
+  guildId: String!
+  level: Int!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type GuildPermission {
+  id: String!
+  guildRankId: String!
+  action: GuildPermissionType!
+  permitted: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Container {
+  id: String!
+  name: String!
+  capacity: Int!
+  slots: Int!
+  isLocked: Boolean!
+  ownerId: String
+  mapId: String
+  x: Int!
+  y: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type InventoryItem {
+  id: String!
+  itemId: String!
+  quantity: Int!
+  isBroken: Boolean!
+  isDroppable: Boolean!
+  isEquipped: Boolean!
+  isTradeable: Boolean!
+  degradation: Int!
+  tier: Int!
+  quality: ItemQualityType!
+  containerId: String
+  containerType: ContainerType
+  playerId: String
+  equippedSlot: SlotType
+  guildTagId: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Item {
+  id: String!
+  slug: String!
+  name: String!
+  description: String
+  type: ItemType!
+  slot: SlotType!
+  element: ElementType!
+  material: MaterialType!
+  weight: Int!
+  baseCost: Int!
+  buyPrice: Int!
+  sellPrice: Int!
+  fragility: Int!
+  toHitBonus: Int!
+  minLevel: Int!
+  maxLevel: Int!
+  decayRate: Int!
+  canBeBroken: Boolean!
+  canOverrideCollision: Boolean!
+  effects: JSON
+  spellSlug: String
+  action: ItemActionType!
+  statEffects: JSON
+  quality: QualityType!
+  createdById: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Recipe {
+  id: String!
+  slug: String!
+  name: String!
+  description: String!
+  resultItemId: String!
+  skillType: SkillType!
+  difficulty: Int!
+  ingredients: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Location {
+  id: String!
+  mapId: String!
+  x: Int!
+  y: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Map {
+  id: String!
+  regionId: String
+  name: String!
+  description: String!
+  height: Int!
+  width: Int!
+  isLocked: Boolean!
+  isSystemMap: Boolean!
+  s3JsonUrl: String!
+  s3BitmaskUrl: String!
+  wildLifeMaxCount: Int!
+  wildLifeTypes: JSON
+  wildLifeColors: JSON
+  creatorId: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MapEvent {
+  id: String!
+  mapId: String!
+  x: Int!
+  y: Int!
+  priority: Int!
+  condition: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MapEventAction {
+  id: String!
+  mapEventId: String!
+  mapId: String!
+  x: Int!
+  y: Int!
+  type: MapEventActionType!
+  message: String!
+  tileId: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MapEventCondition {
+  id: String!
+  scope: String!
+  variable: String!
+  operator: String!
+  value: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MapEventCompoundCondition {
+  id: String!
+  operator: MapEventLogicOperator!
+  conditions: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MapTile {
+  id: String!
+  mapId: String!
+  x: Int!
+  y: Int!
+  tileDefinitionId: String!
+  isWalkable: Boolean!
+  objectType: ObjectType!
+  terrainType: TerrainType!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type TileDefinition {
+  id: String!
+  name: String!
+  tileSetId: String!
+  x: Int!
+  y: Int!
+  canBeForeground: Boolean!
+  isWalkable: Boolean!
+  objectType: ObjectType!
+  terrainType: TerrainType!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type TileSet {
+  id: String!
+  name: String!
+  imageUrl: String!
+  configUrl: String
+  tileSize: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Auction {
+  id: String!
+  sellerId: String!
+  inventoryItemId: String!
+  quantity: Int!
+  startingBid: Int!
+  buyoutPrice: Int
+  currentBidId: String
+  endsAt: String!
+  isActive: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type AuctionBid {
+  id: String!
+  auctionId: String!
+  bidderId: String!
+  amount: Int!
+  createdAt: String!
+}
+
+type MarketListing {
+  id: String!
+  sellerId: String!
+  itemId: String!
+  price: Int!
+  quantity: Int!
+  isBuyOrder: Boolean!
+  isActive: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type NpcStore {
+  id: String!
+  npcId: String!
+  name: String!
+  description: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type NpcStoreItem {
+  id: String!
+  storeId: String!
+  itemId: String!
+  buyPrice: Int!
+  sellPrice: Int!
+  stock: Int
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Trade {
+  id: String!
+  fromPlayerId: String!
+  toPlayerId: String!
+  status: TradeStatus!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type TradeItem {
+  id: String!
+  tradeId: String!
+  itemId: String!
+  ownerId: String!
+  direction: TradeDirection!
+  quantity: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Monster {
+  id: String!
+  name: String!
+  description: String!
+  monsterTypeId: String!
+  spriteImage: String
+  element: ElementType!
+  attackType: AttackType!
+  tier: Int!
+  level: Int!
+  health: Int!
+  mana: Int!
+  strength: Int!
+  dexterity: Int!
+  intelligence: Int!
+  charisma: Int!
+  minGold: Int!
+  maxGold: Int!
+  critChance: Float!
+  critDamage: Float!
+  critResistance: Float!
+  damageReduction: Float!
+  spellResistance: Float!
+  invasionMonster: Boolean!
+  isBoss: Boolean!
+  behavior: JSON
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MonsterLootTable {
+  id: String!
+  monsterId: String!
+  itemId: String!
+  minQty: Int!
+  maxQty: Int!
+  dropRate: Float!
+}
+
+type MonsterType {
+  id: String!
+  name: String!
+  description: String!
+  attackType: AttackType!
+  baseHp: Int!
+  baseStrength: Int!
+  element: ElementType!
+  spriteImage: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PetSacrifice {
+  id: String!
+  slug: String!
+  petLevel: Int!
+  petType1: String!
+  petType2: String!
+  petType3: String!
+  eggSlug: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PetType {
+  id: String!
+  name: String!
+  defaultPet: Boolean!
+  isMountable: Boolean!
+  attackType: AttackType!
+  element: ElementType!
+  family: PetFamilyType!
+  tier: Int!
+  baseHp: Int!
+  baseStrength: Int!
+  critChance: Float!
+  critDamage: Float!
+  critResistance: Float!
+  damageReduction: Float!
+  spellResistance: Float!
+  spriteImage: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Achievement {
+  id: String!
+  slug: String!
+  name: String!
+  description: String
+  tier: AchievementTier!
+  points: Int!
+  category: AchievementCategory!
+  requirements: JSON
+  createdAt: String!
+  updatedAt: String!
+}
+
+type BlockedPlayer {
+  id: String!
+  blockerId: String!
+  blockedId: String!
+}
+
+type Class {
+  id: String!
+  name: String!
+  description: String
+  primaryStat: StatType!
+  secondaryStat: StatType
+  favoredWeapon: WeaponType!
+  bonuses: JSON
+  statGrowth: JSON
+  startingSpells: JSON
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Player {
+  id: String!
+  name: String
+  title: String
+  gender: GenderType!
+  mapId: String
+  x: Int!
+  y: Int!
+  recallLocationId: String
+  isGhost: Boolean!
+  isInvisible: Boolean!
+  ghostUntil: String
+  isBanned: Boolean!
+  isDefault: Boolean!
+  isPaused: Boolean!
+  lastActionAt: String!
+  activeCombatId: String
+  weaponMode: WeaponModeType!
+  switchedWeapon: Boolean!
+  accountId: String!
+  avatarId: String
+  hunger: Int!
+  hungerRate: Int!
+  fatigue: Int!
+  fatigueRate: Int!
+  thirst: Int!
+  thirstRate: Int!
+  colorTheme: JSON
+  customColors: JSON
+  messageFilters: JSON
+  hotbar: JSON!
+  keybinds: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerStats {
+  id: String!
+  playerId: String!
+  gold: Int!
+  experience: Int!
+  level: Int!
+  strength: Int!
+  baseStrength: Int!
+  dexterity: Int!
+  baseDexterity: Int!
+  intelligence: Int!
+  baseIntelligence: Int!
+  charisma: Int!
+  baseCharisma: Int!
+  hp: Int!
+  maxHp: Int!
+  mp: Int!
+  maxMp: Int!
+  critChance: Float!
+  critDamage: Float!
+  critResistance: Float!
+  damageReduction: Float!
+  spellResistance: Float!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerAchievement {
+  id: String!
+  playerId: String!
+  achievementId: String!
+  earnedAt: String!
+  updatedAt: String!
+}
+
+type PlayerActivity {
+  id: String!
+  playerId: String!
+  activityType: String!
+  activityData: JSON!
+  count: Int!
+  timestamp: String!
+}
+
+type PlayerClass {
+  id: String!
+  playerId: String!
+  classId: String!
+  level: Int!
+  experience: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerDeath {
+  id: String!
+  playerId: String!
+  level: Int!
+  killedBy: String!
+  mapId: String!
+  x: Int!
+  y: Int!
+  timestamp: String!
+}
+
+type PlayerEquipment {
+  id: String!
+  playerId: String!
+  slotType: SlotType!
+  itemId: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerMonsterKill {
+  id: String!
+  playerId: String!
+  monsterId: String!
+  count: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerMonsterTypeKill {
+  id: String!
+  playerId: String!
+  typeId: String!
+  count: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerNameHistory {
+  id: String!
+  playerId: String!
+  oldName: String!
+  newName: String!
+  status: StatusType!
+  moderatorId: String
+  reason: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerPet {
+  id: String!
+  name: String!
+  playerId: String!
+  typeId: String!
+  attackType: AttackType!
+  tier: Int!
+  currentHp: Int!
+  hunger: Int!
+  loneliness: Int!
+  isEgg: Boolean!
+  isJuvenile: Boolean!
+  isSelected: Boolean!
+  hatchesAt: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerQuest {
+  id: String!
+  playerId: String!
+  questId: String!
+  completed: Boolean!
+  status: QuestStatusType!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerQuestVariable {
+  id: String!
+  playerQuestId: String!
+  name: String!
+  value: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerRecipe {
+  id: String!
+  playerId: String!
+  recipeId: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerRole {
+  id: String!
+  playerId: String!
+  roleId: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerSkill {
+  id: String!
+  playerId: String!
+  name: String!
+  skillType: SkillType!
+  level: Int!
+  points: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerSpell {
+  id: String!
+  playerId: String!
+  spellId: String!
+  count: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PlayerTitle {
+  id: String!
+  playerId: String!
+  titleId: String!
+  awardedAt: String!
+}
+
+type PlayerVariable {
+  id: String!
+  playerId: String!
+  key: String!
+  value: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Title {
+  id: String!
+  slug: String!
+  name: String!
+  female: String
+  description: String!
+  display: TitleDisplayType!
+  isGrantable: Boolean!
+  achievementId: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Quest {
+  id: String!
+  slug: String!
+  name: String!
+  description: String
+  createdById: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type QuestRequirements {
+  id: String!
+  questId: String!
+  level: Int!
+  items: JSON!
+  skills: JSON!
+  quests: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type QuestRewards {
+  id: String!
+  questId: String!
+  experience: Int!
+  gold: Int!
+  items: JSON!
+  skills: JSON!
+  titles: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Region {
+  id: String!
+  slug: String!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type RegionalDish {
+  id: String!
+  regionId: String!
+  dish: String!
+  rarity: IngredientRarityType!
+  bonusDuration: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type RegionalDishBonus {
+  id: String!
+  regionalDishId: String!
+  bonusCategory: BonusCategoryType!
+  value: Int!
+  mythicBonus: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type RegionalIngredient {
+  id: String!
+  regionId: String!
+  ingredient: String!
+  rarity: IngredientRarityType!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Spell {
+  id: String!
+  slug: String!
+  name: String!
+  description: String
+  minLevel: Int!
+  element: ElementType!
+  skillType: SkillType
+  attackType: AttackType!
+  manaCost: Int!
+  cooldown: Int!
+  castTime: Int!
+  range: Int!
+  areaOfEffect: Int!
+  effect: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MessageLog {
+  id: String!
+  senderId: String
+  recipientId: String
+  messageType: MessageType!
+  content: String!
+  isFlagged: Boolean!
+  isFiltered: Boolean!
+  badWords: JSON!
+  moderatorId: String
+  moderationNote: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type ProfanityPattern {
+  id: String!
+  pattern: String!
+  severity: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Role {
+  id: String!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type RolePermission {
+  id: String!
+  roleId: String!
+  permission: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type WorldConfig {
+  id: String!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type WorldConfigSetting {
+  id: String!
+  worldConfigId: String!
+  name: WorldConfigSettingType!
+  value: String!
+  createdAt: String!
+  updatedAt: String!
+}
+

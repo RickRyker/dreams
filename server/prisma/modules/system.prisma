@@ -1,0 +1,193 @@
+// ---------------------------------------
+//  System / Utility Enums and Models
+// ---------------------------------------
+
+enum MapEventActionType {
+  TRANSITION
+  MESSAGE
+  OVERLAP_TILE
+}
+
+enum MapEventLogicOperator {
+  AND
+  OR
+  NOT
+}
+
+enum MaterialType {
+  BONE
+  CERAMIC
+  CLOTH
+  DUST
+  ESSENCE
+  FIBER
+  GAS
+  GLASS
+  GRAIN
+  LEATHER
+  LIQUID
+  MEAT
+  METAL
+  MINERAL
+  ORGANIC
+  PLANT
+  STONE
+  WOOD
+  NONE
+  OTHER
+  UNKNOWN
+}
+
+model MessageLog {
+  id             String      @id @default(cuid())
+  senderId       String? // Who sent it (character-based messaging)
+  sender         Player?     @relation("MessageSender", fields: [senderId], references: [id])
+  recipientId    String? // Who received it (null for global/system messages)
+  recipient      Player?     @relation("MessageRecipient", fields: [recipientId], references: [id])
+  messageType    MessageType @default(SYSTEM)
+  content        String
+  isFlagged      Boolean     @default(false)
+  isFiltered     Boolean     @default(false)
+  badWords       Json // {[ 'bad-word1', 'bad-word2' ]}
+  moderatorId    String?
+  moderator      Player?     @relation("MessageModerator", fields: [moderatorId], references: [id])
+  moderationNote String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+enum MessageType {
+  ADMIN
+  BOT
+  CHAT
+  COMBAT
+  ERROR
+  NPC
+  PLAYER
+  QUEST
+  SYSTEM
+  WHISPER
+}
+
+enum ObjectType {
+  NONE
+  BOULDER
+  BRIDGE
+  BUILDING
+  BUSH
+  CAVE
+  DECORATION
+  FURNITURE
+  HILL
+  NPC
+  RIVER
+  ROAD
+  STREAM
+  TREES
+  WALL
+}
+
+enum QualityType {
+  F
+  E
+  D
+  C
+  B
+  A
+  S
+  SS
+  SSS
+  M
+}
+
+enum SlotType {
+  NONE
+  WEAPON
+  OFFHAND
+  ARMOR
+  HEAD
+  NECK
+  HANDS
+  WAIST
+  LEGS
+  FEET
+  RING1
+  RING2
+  EARS
+  EYES
+  FACE
+  BACK
+}
+
+enum StatusType {
+  PENDING
+  APPROVED
+  DENIED
+}
+
+enum WeaponModeType {
+  MELEE
+  RANGED
+}
+
+model ProfanityPattern {
+  id        String   @id @default(cuid())
+  pattern   String   @unique
+  severity  Int      @default(5)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  name        String
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  playerRoles PlayerRole[] // bi-directional relationship
+}
+
+model RolePermission {
+  id         String   @id @default(cuid())
+  roleId     String
+  role       Role     @relation(fields: [roleId], references: [id])
+  permission String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model WorldConfig {
+  id        String               @id @default(cuid())
+  name      String               @default("Dreams of Nowhere Else and Beyond")
+  settings  WorldConfigSetting[]
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+}
+
+model WorldConfigSetting {
+  id            String                 @id @default(cuid())
+  worldConfigId String
+  worldConfig   WorldConfig            @relation(fields: [worldConfigId], references: [id])
+  name          WorldConfigSettingType
+  value         String
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  @@index([worldConfigId, name])
+}
+
+enum WorldConfigSettingType {
+  BUFFER_SIZE
+  MAINTENANCE_START
+  LOG_SIZE_LIMIT_BYTES
+  LOG_PRUNE_DAYS
+  IS_MAINTENANCE_MODE
+  BYPASS_MAINTENANCE
+  SIMILARITY_THRESHOLD
+  TUTORIAL_MAP
+  TUTORIAL_START_X
+  TUTORIAL_START_Y
+  GHOST_DURATION_MINUTES
+  MIN_LEVEL_CREATE_GUILD
+  MIN_LEVEL_JOIN_GUILD
+}

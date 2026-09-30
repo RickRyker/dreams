@@ -1,0 +1,184 @@
+// =======================================
+//  Items & Inventory Module
+// =======================================
+
+model Container {
+  id        String          @id @default(cuid())
+  name      String
+  capacity  Int // max weight or volume
+  slots     Int // number of item slots
+  isLocked  Boolean         @default(false)
+  items     InventoryItem[]
+  ownerId   String?
+  owner     Player?         @relation("ContainerOwner", fields: [ownerId], references: [id])
+  mapId     String?
+  map       Map?            @relation(fields: [mapId], references: [id])
+  x         Int             @default(0)
+  y         Int             @default(0)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+enum ContainerType {
+  AUCTION
+  BANK
+  CHEST
+  GUILD
+  MAIL
+  PLAYER
+  STORE
+}
+
+model InventoryItem {
+  id              String            @id @default(cuid())
+  itemId          String
+  item            Item              @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  quantity        Int               @default(0)
+  isBroken        Boolean           @default(false)
+  isDroppable     Boolean           @default(false)
+  isEquipped      Boolean           @default(false)
+  isTradeable     Boolean           @default(false)
+  degradation     Int               @default(0)
+  tier            Int               @default(0) // adds to all stats in combat the higher the tier
+  quality         ItemQualityType   @default(STANDARD) // used for recipe ingredients
+  containerId     String?
+  container       Container?        @relation(fields: [containerId], references: [id])
+  containerType   ContainerType?
+  playerId        String?
+  player          Player?           @relation(fields: [playerId], references: [id])
+  equippedSlot    SlotType?
+  guildTagId      String?
+  guild           Guild?            @relation(fields: [guildTagId], references: [id])
+  // do we need to track who donated an item to a guild treasury?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  // bi-directional relationships
+  auctionItems    Auction[]         @relation("AuctionItems")
+  playerEquipment PlayerEquipment[]
+  marketListings  MarketListing[]
+  tradeItems      TradeItem[]
+}
+
+model Item {
+  id                   String             @id @default(cuid())
+  slug                 String             @unique
+  name                 String
+  description          String?            @default("Nothing special about this item.")
+  type                 ItemType           @default(NONE)
+  slot                 SlotType           @default(NONE)
+  element              ElementType        @default(NONE)
+  material             MaterialType       @default(OTHER)
+  weight               Int                @default(1)
+  baseCost             Int                @default(1)
+  buyPrice             Int                @default(1)
+  sellPrice            Int                @default(1)
+  fragility            Int                @default(0) // % chance normal use can damage the item
+  toHitBonus           Int                @default(0)
+  minLevel             Int                @default(1)
+  maxLevel             Int                @default(800)
+  decayRate            Int                @default(1)
+  canBeBroken          Boolean            @default(true)
+  canOverrideCollision Boolean            @default(false) // boat over water
+  effects              Json?
+  spellSlug            String?
+  action               ItemActionType     @default(NONE)
+  statEffects          Json?
+  quality              QualityType        @default(F)
+  createdById          String?
+  createdBy            Player?            @relation("CreatedItems", fields: [createdById], references: [id])
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  // bi-directional relationships
+  inventories          InventoryItem[]
+  lootDrops            CombatLoot[]
+  monsterLootTables    MonsterLootTable[]
+  recipes              Recipe[]
+  storeItems           NpcStoreItem[]
+  eventRewards         EventReward[]
+}
+
+enum ItemActionType {
+  NONE
+  DRINK
+  EAT
+  READ
+  USE
+}
+
+enum ItemQualityType {
+  RUINED
+  POOR
+  STANDARD // default
+  FINE
+  PRISTINE
+}
+
+enum ItemType {
+  NONE
+  ARMOR
+  ARROW
+  AXE
+  BELT
+  BLUEPRINT
+  BOLT
+  BOOT
+  BOW
+  BULLET
+  CONTAINER
+  CLUB
+  CROP
+  CROSSBOW
+  DRINK
+  FLOWER
+  FOOD
+  FURNITURE
+  GEM
+  GLOVE
+  HAMMER
+  HAT
+  HERB
+  INGOT
+  INGREDIENT
+  INSTRUMENT
+  KNIFE
+  MATERIAL
+  MEAL
+  MEAT
+  ORE
+  PAINT
+  PENDANT
+  PET
+  PIGMENT
+  PLANK
+  POTION
+  REAGENT
+  RECIPE
+  REMAINS
+  RING
+  SCROLL
+  SHIELD
+  SLUG
+  SPEAR
+  STAFF
+  SWORD
+  TOOL
+  WAND
+  WEAPON
+}
+
+model Recipe {
+  id            String         @id @default(cuid())
+  slug          String         @unique
+  name          String         @default("Unnamed Recipe")
+  description   String         @default("No description provided.")
+  resultItemId  String
+  skillSlug     String
+  difficulty    Int            @default(1)
+  ingredients   Json // [ { slug: 'milk', qty: 1 } ]
+  resultItem    Item           @relation(fields: [resultItemId], references: [id])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  // bi-directional relationships
+  playerRecipes PlayerRecipe[]
+  eventRewards  EventReward[]
+}

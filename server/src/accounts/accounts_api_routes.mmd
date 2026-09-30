@@ -1,0 +1,65 @@
+flowchart TD
+
+  subgraph Router["Account Router (/accounts)"]
+    direction TB
+    R_register["POST /register"]
+    R_login["POST /login"]
+    R_verifyEmail["POST /verify-email"]
+    R_resendVerification["POST /resend-verification"]
+    R_getAccount["GET /:accountId"]
+    R_updatePassword["POST /password/update"]
+    R_requestPasswordReset["POST /password/reset/request"]
+    R_resetPassword["POST /password/reset"]
+    R_listPlayers["GET /:accountId/players"]
+    R_setDefaultPlayer["POST /:accountId/players/:playerId/default"]
+  end
+
+  subgraph Controller["AccountController"]
+    direction TB
+    C_register
+    C_login
+    C_verifyEmail
+    C_resendVerification
+    C_getAccount
+    C_updatePassword
+    C_requestPasswordReset
+    C_resetPassword
+    C_listPlayers
+    C_setDefaultPlayer
+  end
+
+  subgraph Service["AccountService"]
+    direction TB
+    S_register
+    S_login
+    S_verifyEmail
+    S_resendVerification
+    S_getAccount
+    S_updatePassword
+    S_requestPasswordReset
+    S_resetPassword
+    S_listPlayers
+    S_setDefaultPlayer
+  end
+
+  subgraph Repo["AccountRepository"]
+    direction TB
+    DB_createAccount
+    DB_findByEmail
+    DB_findById
+    DB_updatePassword
+    DB_createVerificationToken
+    DB_verifyToken
+    DB_createPasswordResetToken
+    DB_resetPassword
+    DB_listPlayers
+    DB_setDefaultPlayer
+  end
+
+  %% Router → Controller
+  R_register --> C_register
+  R_login --> C_login
+  R_verifyEmail --> C_verifyEmail
+  R_resendVerification --> C_resendVerification
+  R_getAccount --> C_getAccount
+  R_updatePassword --> C_updatePassword

@@ -1,0 +1,4333 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Dialog API",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "passwordHash": {
+            "type": "string"
+          },
+          "emailVerifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "passwordHash",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "AccountAuthentication": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "accountId",
+          "provider",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Avatar": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "s3Key": {
+            "type": "string"
+          },
+          "isApproved": {
+            "type": "boolean"
+          },
+          "isFree": {
+            "type": "boolean"
+          },
+          "creatorId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "accountId",
+          "name",
+          "description",
+          "s3Key",
+          "isApproved",
+          "isFree",
+          "creatorId",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Device": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lastIp": {
+            "type": "string"
+          },
+          "trusted": {
+            "type": "boolean"
+          },
+          "lastUsed": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "accountId",
+          "name",
+          "lastIp",
+          "trusted",
+          "lastUsed",
+          "createdAt"
+        ]
+      },
+      "EmailChangeToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "token",
+          "accountId",
+          "email",
+          "createdAt",
+          "expiresAt"
+        ]
+      },
+      "MfaSecret": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "accountId",
+          "secret",
+          "enabled",
+          "createdAt"
+        ]
+      },
+      "PasswordResetToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "token",
+          "accountId",
+          "createdAt",
+          "expiresAt"
+        ]
+      },
+      "RateLimit": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "ip": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ip",
+          "endpoint",
+          "timestamp"
+        ]
+      },
+      "RefreshToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tokenHash": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "tokenHash",
+          "accountId",
+          "createdAt",
+          "expiresAt"
+        ]
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "sid": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "sid",
+          "data",
+          "expiresAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "VerificationToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "used": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "token",
+          "accountId",
+          "email",
+          "expiresAt",
+          "used",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "AdminActionLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "gmId": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "actionType": {
+            "type": "string"
+          },
+          "payload": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "gmId",
+          "actionType",
+          "payload",
+          "createdAt"
+        ]
+      },
+      "Ban": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdById": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "reason",
+          "createdById",
+          "createdAt"
+        ]
+      },
+      "Mute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdById": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "reason",
+          "createdAt",
+          "createdById"
+        ]
+      },
+      "EconomySnapshot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "takenAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalGold": {
+            "type": "number"
+          },
+          "totalItems": {
+            "type": "number"
+          },
+          "activeAuctions": {
+            "type": "number"
+          },
+          "activeListings": {
+            "type": "number"
+          },
+          "metadata": {}
+        },
+        "required": [
+          "id",
+          "takenAt",
+          "totalGold",
+          "totalItems",
+          "activeAuctions",
+          "activeListings"
+        ]
+      },
+      "HeatmapEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "eventType": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "mapId",
+          "x",
+          "y",
+          "eventType",
+          "createdAt"
+        ]
+      },
+      "PlayerSessionLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "loginAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "logoutAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ipAddress": {
+            "type": "string"
+          },
+          "clientVersion": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "loginAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ServerMetric": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "tags": {},
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "value",
+          "recordedAt"
+        ]
+      },
+      "ChatBot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "triggerName": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ChatBotResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "chatBotId": {
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "replies": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "chatBotId",
+          "pattern",
+          "replies",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CombatEffect": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "spellSlug": {
+            "type": "string"
+          },
+          "participantId": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "element": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "magnitude": {
+            "type": "number"
+          },
+          "expired": {
+            "type": "boolean"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "spellSlug",
+          "participantId",
+          "type",
+          "magnitude",
+          "expired",
+          "expiresAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CombatLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "combatId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "actorId": {
+            "type": "string"
+          },
+          "actorType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {},
+          "seq": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "combatId",
+          "type",
+          "message",
+          "seq",
+          "createdAt"
+        ]
+      },
+      "CombatLoot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "participantId": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "qty": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "participantId",
+          "itemId",
+          "qty",
+          "createdAt"
+        ]
+      },
+      "CombatParticipant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "combatId": {
+            "type": "string"
+          },
+          "participantType": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "petId": {
+            "type": "string"
+          },
+          "monsterId": {
+            "type": "string"
+          },
+          "corpseName": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "number"
+          },
+          "hp": {
+            "type": "number"
+          },
+          "maxHp": {
+            "type": "number"
+          },
+          "mp": {
+            "type": "number"
+          },
+          "maxMp": {
+            "type": "number"
+          },
+          "strength": {
+            "type": "number"
+          },
+          "dexterity": {
+            "type": "number"
+          },
+          "intelligence": {
+            "type": "number"
+          },
+          "charisma": {
+            "type": "number"
+          },
+          "critChance": {
+            "type": "number"
+          },
+          "critDamage": {
+            "type": "number"
+          },
+          "critResistance": {
+            "type": "number"
+          },
+          "damageReduction": {
+            "type": "number"
+          },
+          "spellResistance": {
+            "type": "number"
+          },
+          "abilityCooldowns": {},
+          "initiative": {
+            "type": "number"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "hasActed": {
+            "type": "boolean"
+          },
+          "isAlive": {
+            "type": "boolean"
+          },
+          "isInvisible": {
+            "type": "boolean"
+          },
+          "gold": {
+            "type": "number"
+          },
+          "isLooted": {
+            "type": "boolean"
+          },
+          "gcdSeconds": {
+            "type": "number"
+          },
+          "globalCooldownUntil": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "combatId",
+          "participantType",
+          "tier",
+          "hp",
+          "maxHp",
+          "mp",
+          "maxMp",
+          "strength",
+          "dexterity",
+          "intelligence",
+          "charisma",
+          "critChance",
+          "critDamage",
+          "critResistance",
+          "damageReduction",
+          "spellResistance",
+          "initiative",
+          "x",
+          "y",
+          "hasActed",
+          "isAlive",
+          "isInvisible",
+          "gold",
+          "isLooted",
+          "gcdSeconds",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CombatSession": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "turnPhase": {
+            "type": "string"
+          },
+          "activeTurnId": {
+            "type": "string"
+          },
+          "toHitBonus": {
+            "type": "number"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "turnTimeoutSeconds": {
+            "type": "number"
+          },
+          "roundNumber": {
+            "type": "number"
+          },
+          "lastTurnAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "mapId",
+          "turnPhase",
+          "toHitBonus",
+          "isActive",
+          "startTime",
+          "turnTimeoutSeconds",
+          "roundNumber",
+          "lastTurnAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CombatThreat": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "combatId": {
+            "type": "string"
+          },
+          "monsterId": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "combatId",
+          "monsterId",
+          "targetId",
+          "value"
+        ]
+      },
+      "Dialog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "displayMode": {
+            "type": "string"
+          },
+          "chatBotId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "displayMode",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DialogAction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string"
+          },
+          "sequence": {
+            "type": "number"
+          },
+          "action": {
+            "type": "string"
+          },
+          "questId": {
+            "type": "string"
+          },
+          "variable1": {
+            "type": "string"
+          },
+          "variable2": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "numberAmt": {
+            "type": "number"
+          },
+          "floatAmt": {
+            "type": "number"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "skill": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "sound": {
+            "type": "string"
+          },
+          "music": {
+            "type": "string"
+          },
+          "cutscene": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "sequence",
+          "action",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DialogCondition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "partId": {
+            "type": "string"
+          },
+          "actionId": {
+            "type": "string"
+          },
+          "linkId": {
+            "type": "string"
+          },
+          "questId": {
+            "type": "string"
+          },
+          "variable": {
+            "type": "string"
+          },
+          "operator": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "questId",
+          "variable",
+          "operator",
+          "value",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DialogLink": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string"
+          },
+          "sequence": {
+            "type": "number"
+          },
+          "dialogId": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "leave": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DialogPage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "dialogId": {
+            "type": "string"
+          },
+          "sequence": {
+            "type": "number"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "dialogId",
+          "sequence",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DialogPart": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string"
+          },
+          "sequence": {
+            "type": "number"
+          },
+          "text": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "sequence",
+          "text",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "isHoliday": {
+            "type": "boolean"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdById": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "description",
+          "type",
+          "isHoliday",
+          "startsAt",
+          "endsAt",
+          "isActive",
+          "createdById"
+        ]
+      },
+      "EventParticipation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "progress": {},
+          "completed": {
+            "type": "boolean"
+          },
+          "rewardClaimed": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "eventId",
+          "playerId",
+          "progress",
+          "completed",
+          "rewardClaimed",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "EventReward": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "rewardType": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "recipeId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "eventId",
+          "rewardType"
+        ]
+      },
+      "Guild": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "reputation": {
+            "type": "number"
+          },
+          "founderId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "reputation",
+          "founderId",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GuildLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "guildId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "guildId",
+          "type",
+          "action",
+          "playerId",
+          "details",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GuildMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "guildId": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "rankLevel": {
+            "type": "number"
+          },
+          "rankId": {
+            "type": "string"
+          },
+          "credits": {
+            "type": "number"
+          },
+          "joinAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "guildId",
+          "playerId",
+          "rankLevel",
+          "rankId",
+          "credits",
+          "joinAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GuildRank": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "guildId": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "guildId",
+          "level",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GuildPermission": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "guildRankId": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "permitted": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "guildRankId",
+          "action",
+          "permitted",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Container": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "capacity": {
+            "type": "number"
+          },
+          "slots": {
+            "type": "number"
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "capacity",
+          "slots",
+          "isLocked",
+          "x",
+          "y",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "InventoryItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "isBroken": {
+            "type": "boolean"
+          },
+          "isDroppable": {
+            "type": "boolean"
+          },
+          "isEquipped": {
+            "type": "boolean"
+          },
+          "isTradeable": {
+            "type": "boolean"
+          },
+          "degradation": {
+            "type": "number"
+          },
+          "tier": {
+            "type": "number"
+          },
+          "quality": {
+            "type": "string"
+          },
+          "containerId": {
+            "type": "string"
+          },
+          "containerType": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "equippedSlot": {
+            "type": "string"
+          },
+          "guildTagId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "itemId",
+          "quantity",
+          "isBroken",
+          "isDroppable",
+          "isEquipped",
+          "isTradeable",
+          "degradation",
+          "tier",
+          "quality",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Item": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "string"
+          },
+          "element": {
+            "type": "string"
+          },
+          "material": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "baseCost": {
+            "type": "number"
+          },
+          "buyPrice": {
+            "type": "number"
+          },
+          "sellPrice": {
+            "type": "number"
+          },
+          "fragility": {
+            "type": "number"
+          },
+          "toHitBonus": {
+            "type": "number"
+          },
+          "minLevel": {
+            "type": "number"
+          },
+          "maxLevel": {
+            "type": "number"
+          },
+          "decayRate": {
+            "type": "number"
+          },
+          "canBeBroken": {
+            "type": "boolean"
+          },
+          "canOverrideCollision": {
+            "type": "boolean"
+          },
+          "effects": {},
+          "spellSlug": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "statEffects": {},
+          "quality": {
+            "type": "string"
+          },
+          "createdById": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "type",
+          "slot",
+          "element",
+          "material",
+          "weight",
+          "baseCost",
+          "buyPrice",
+          "sellPrice",
+          "fragility",
+          "toHitBonus",
+          "minLevel",
+          "maxLevel",
+          "decayRate",
+          "canBeBroken",
+          "canOverrideCollision",
+          "action",
+          "quality",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Recipe": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "resultItemId": {
+            "type": "string"
+          },
+          "skillType": {
+            "type": "string"
+          },
+          "difficulty": {
+            "type": "number"
+          },
+          "ingredients": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "description",
+          "resultItemId",
+          "skillType",
+          "difficulty",
+          "ingredients",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "mapId",
+          "x",
+          "y",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Map": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "regionId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "width": {
+            "type": "number"
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
+          "isSystemMap": {
+            "type": "boolean"
+          },
+          "s3JsonUrl": {
+            "type": "string"
+          },
+          "s3BitmaskUrl": {
+            "type": "string"
+          },
+          "wildLifeMaxCount": {
+            "type": "number"
+          },
+          "wildLifeTypes": {},
+          "wildLifeColors": {},
+          "creatorId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "height",
+          "width",
+          "isLocked",
+          "isSystemMap",
+          "s3JsonUrl",
+          "s3BitmaskUrl",
+          "wildLifeMaxCount",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MapEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "priority": {
+            "type": "number"
+          },
+          "condition": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "mapId",
+          "x",
+          "y",
+          "priority",
+          "condition",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MapEventAction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mapEventId": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "tileId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "mapEventId",
+          "mapId",
+          "x",
+          "y",
+          "type",
+          "message",
+          "tileId",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MapEventCondition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "variable": {
+            "type": "string"
+          },
+          "operator": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "scope",
+          "variable",
+          "operator",
+          "value",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MapEventCompoundCondition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "operator": {
+            "type": "string"
+          },
+          "conditions": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "operator",
+          "conditions",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MapTile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "tileDefinitionId": {
+            "type": "string"
+          },
+          "isWalkable": {
+            "type": "boolean"
+          },
+          "objectType": {
+            "type": "string"
+          },
+          "terrainType": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "mapId",
+          "x",
+          "y",
+          "tileDefinitionId",
+          "isWalkable",
+          "objectType",
+          "terrainType",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "TileDefinition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tileSetId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "canBeForeground": {
+            "type": "boolean"
+          },
+          "isWalkable": {
+            "type": "boolean"
+          },
+          "objectType": {
+            "type": "string"
+          },
+          "terrainType": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "tileSetId",
+          "x",
+          "y",
+          "canBeForeground",
+          "isWalkable",
+          "objectType",
+          "terrainType",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "TileSet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "configUrl": {
+            "type": "string"
+          },
+          "tileSize": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "imageUrl",
+          "tileSize",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Auction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "sellerId": {
+            "type": "string"
+          },
+          "inventoryItemId": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "startingBid": {
+            "type": "number"
+          },
+          "buyoutPrice": {
+            "type": "number"
+          },
+          "currentBidId": {
+            "type": "string"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "sellerId",
+          "inventoryItemId",
+          "quantity",
+          "startingBid",
+          "endsAt",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "AuctionBid": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "auctionId": {
+            "type": "string"
+          },
+          "bidderId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "auctionId",
+          "bidderId",
+          "amount",
+          "createdAt"
+        ]
+      },
+      "MarketListing": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "sellerId": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "isBuyOrder": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "sellerId",
+          "itemId",
+          "price",
+          "quantity",
+          "isBuyOrder",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "NpcStore": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "npcId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "npcId",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "NpcStoreItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "storeId": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "buyPrice": {
+            "type": "number"
+          },
+          "sellPrice": {
+            "type": "number"
+          },
+          "stock": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "storeId",
+          "itemId",
+          "buyPrice",
+          "sellPrice",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Trade": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fromPlayerId": {
+            "type": "string"
+          },
+          "toPlayerId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "fromPlayerId",
+          "toPlayerId",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "TradeItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tradeId": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "tradeId",
+          "itemId",
+          "ownerId",
+          "direction",
+          "quantity",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Monster": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "monsterTypeId": {
+            "type": "string"
+          },
+          "spriteImage": {
+            "type": "string"
+          },
+          "element": {
+            "type": "string"
+          },
+          "attackType": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "number"
+          },
+          "level": {
+            "type": "number"
+          },
+          "health": {
+            "type": "number"
+          },
+          "mana": {
+            "type": "number"
+          },
+          "strength": {
+            "type": "number"
+          },
+          "dexterity": {
+            "type": "number"
+          },
+          "intelligence": {
+            "type": "number"
+          },
+          "charisma": {
+            "type": "number"
+          },
+          "minGold": {
+            "type": "number"
+          },
+          "maxGold": {
+            "type": "number"
+          },
+          "critChance": {
+            "type": "number"
+          },
+          "critDamage": {
+            "type": "number"
+          },
+          "critResistance": {
+            "type": "number"
+          },
+          "damageReduction": {
+            "type": "number"
+          },
+          "spellResistance": {
+            "type": "number"
+          },
+          "invasionMonster": {
+            "type": "boolean"
+          },
+          "isBoss": {
+            "type": "boolean"
+          },
+          "behavior": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "monsterTypeId",
+          "element",
+          "attackType",
+          "tier",
+          "level",
+          "health",
+          "mana",
+          "strength",
+          "dexterity",
+          "intelligence",
+          "charisma",
+          "minGold",
+          "maxGold",
+          "critChance",
+          "critDamage",
+          "critResistance",
+          "damageReduction",
+          "spellResistance",
+          "invasionMonster",
+          "isBoss",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MonsterLootTable": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "monsterId": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "minQty": {
+            "type": "number"
+          },
+          "maxQty": {
+            "type": "number"
+          },
+          "dropRate": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "monsterId",
+          "itemId",
+          "minQty",
+          "maxQty",
+          "dropRate"
+        ]
+      },
+      "MonsterType": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "attackType": {
+            "type": "string"
+          },
+          "baseHp": {
+            "type": "number"
+          },
+          "baseStrength": {
+            "type": "number"
+          },
+          "element": {
+            "type": "string"
+          },
+          "spriteImage": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "attackType",
+          "baseHp",
+          "baseStrength",
+          "element",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PetSacrifice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "petLevel": {
+            "type": "number"
+          },
+          "petType1": {
+            "type": "string"
+          },
+          "petType2": {
+            "type": "string"
+          },
+          "petType3": {
+            "type": "string"
+          },
+          "eggSlug": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "petLevel",
+          "petType1",
+          "petType2",
+          "petType3",
+          "eggSlug",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PetType": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "defaultPet": {
+            "type": "boolean"
+          },
+          "isMountable": {
+            "type": "boolean"
+          },
+          "attackType": {
+            "type": "string"
+          },
+          "element": {
+            "type": "string"
+          },
+          "family": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "number"
+          },
+          "baseHp": {
+            "type": "number"
+          },
+          "baseStrength": {
+            "type": "number"
+          },
+          "critChance": {
+            "type": "number"
+          },
+          "critDamage": {
+            "type": "number"
+          },
+          "critResistance": {
+            "type": "number"
+          },
+          "damageReduction": {
+            "type": "number"
+          },
+          "spellResistance": {
+            "type": "number"
+          },
+          "spriteImage": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "defaultPet",
+          "isMountable",
+          "attackType",
+          "element",
+          "family",
+          "tier",
+          "baseHp",
+          "baseStrength",
+          "critChance",
+          "critDamage",
+          "critResistance",
+          "damageReduction",
+          "spellResistance",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Achievement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "string"
+          },
+          "points": {
+            "type": "number"
+          },
+          "category": {
+            "type": "string"
+          },
+          "requirements": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "tier",
+          "points",
+          "category",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "BlockedPlayer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "blockerId": {
+            "type": "string"
+          },
+          "blockedId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "blockerId",
+          "blockedId"
+        ]
+      },
+      "Class": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "primaryStat": {
+            "type": "string"
+          },
+          "secondaryStat": {
+            "type": "string"
+          },
+          "favoredWeapon": {
+            "type": "string"
+          },
+          "bonuses": {},
+          "statGrowth": {},
+          "startingSpells": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "primaryStat",
+          "favoredWeapon",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "recallLocationId": {
+            "type": "string"
+          },
+          "isGhost": {
+            "type": "boolean"
+          },
+          "isInvisible": {
+            "type": "boolean"
+          },
+          "ghostUntil": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isBanned": {
+            "type": "boolean"
+          },
+          "isDefault": {
+            "type": "boolean"
+          },
+          "isPaused": {
+            "type": "boolean"
+          },
+          "lastActionAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "activeCombatId": {
+            "type": "string"
+          },
+          "weaponMode": {
+            "type": "string"
+          },
+          "switchedWeapon": {
+            "type": "boolean"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "avatarId": {
+            "type": "string"
+          },
+          "hunger": {
+            "type": "number"
+          },
+          "hungerRate": {
+            "type": "number"
+          },
+          "fatigue": {
+            "type": "number"
+          },
+          "fatigueRate": {
+            "type": "number"
+          },
+          "thirst": {
+            "type": "number"
+          },
+          "thirstRate": {
+            "type": "number"
+          },
+          "colorTheme": {},
+          "customColors": {},
+          "messageFilters": {},
+          "hotbar": {},
+          "keybinds": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "gender",
+          "x",
+          "y",
+          "isGhost",
+          "isInvisible",
+          "isBanned",
+          "isDefault",
+          "isPaused",
+          "lastActionAt",
+          "weaponMode",
+          "switchedWeapon",
+          "accountId",
+          "hunger",
+          "hungerRate",
+          "fatigue",
+          "fatigueRate",
+          "thirst",
+          "thirstRate",
+          "hotbar",
+          "keybinds",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerStats": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "gold": {
+            "type": "number"
+          },
+          "experience": {
+            "type": "number"
+          },
+          "level": {
+            "type": "number"
+          },
+          "strength": {
+            "type": "number"
+          },
+          "baseStrength": {
+            "type": "number"
+          },
+          "dexterity": {
+            "type": "number"
+          },
+          "baseDexterity": {
+            "type": "number"
+          },
+          "intelligence": {
+            "type": "number"
+          },
+          "baseIntelligence": {
+            "type": "number"
+          },
+          "charisma": {
+            "type": "number"
+          },
+          "baseCharisma": {
+            "type": "number"
+          },
+          "hp": {
+            "type": "number"
+          },
+          "maxHp": {
+            "type": "number"
+          },
+          "mp": {
+            "type": "number"
+          },
+          "maxMp": {
+            "type": "number"
+          },
+          "critChance": {
+            "type": "number"
+          },
+          "critDamage": {
+            "type": "number"
+          },
+          "critResistance": {
+            "type": "number"
+          },
+          "damageReduction": {
+            "type": "number"
+          },
+          "spellResistance": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "gold",
+          "experience",
+          "level",
+          "strength",
+          "baseStrength",
+          "dexterity",
+          "baseDexterity",
+          "intelligence",
+          "baseIntelligence",
+          "charisma",
+          "baseCharisma",
+          "hp",
+          "maxHp",
+          "mp",
+          "maxMp",
+          "critChance",
+          "critDamage",
+          "critResistance",
+          "damageReduction",
+          "spellResistance",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerAchievement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "achievementId": {
+            "type": "string"
+          },
+          "earnedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "achievementId",
+          "earnedAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerActivity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "activityType": {
+            "type": "string"
+          },
+          "activityData": {},
+          "count": {
+            "type": "number"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "activityType",
+          "activityData",
+          "count",
+          "timestamp"
+        ]
+      },
+      "PlayerClass": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "classId": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          },
+          "experience": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "classId",
+          "level",
+          "experience",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerDeath": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          },
+          "killedBy": {
+            "type": "string"
+          },
+          "mapId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "level",
+          "killedBy",
+          "mapId",
+          "x",
+          "y",
+          "timestamp"
+        ]
+      },
+      "PlayerEquipment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "slotType": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "slotType",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerMonsterKill": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "monsterId": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "monsterId",
+          "count",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerMonsterTypeKill": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "typeId": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "typeId",
+          "count",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerNameHistory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "oldName": {
+            "type": "string"
+          },
+          "newName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "moderatorId": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "oldName",
+          "newName",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerPet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "typeId": {
+            "type": "string"
+          },
+          "attackType": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "number"
+          },
+          "currentHp": {
+            "type": "number"
+          },
+          "hunger": {
+            "type": "number"
+          },
+          "loneliness": {
+            "type": "number"
+          },
+          "isEgg": {
+            "type": "boolean"
+          },
+          "isJuvenile": {
+            "type": "boolean"
+          },
+          "isSelected": {
+            "type": "boolean"
+          },
+          "hatchesAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "playerId",
+          "typeId",
+          "attackType",
+          "tier",
+          "currentHp",
+          "hunger",
+          "loneliness",
+          "isEgg",
+          "isJuvenile",
+          "isSelected",
+          "hatchesAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerQuest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "questId": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "questId",
+          "completed",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerQuestVariable": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerQuestId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerQuestId",
+          "name",
+          "value",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerRecipe": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "recipeId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "recipeId",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerRole": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "roleId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "roleId",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerSkill": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "skillType": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          },
+          "points": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "name",
+          "skillType",
+          "level",
+          "points",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerSpell": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "spellId": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "spellId",
+          "count",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PlayerTitle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "titleId": {
+            "type": "string"
+          },
+          "awardedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "titleId",
+          "awardedAt"
+        ]
+      },
+      "PlayerVariable": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "playerId",
+          "key",
+          "value",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Title": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "female": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "display": {
+            "type": "string"
+          },
+          "isGrantable": {
+            "type": "boolean"
+          },
+          "achievementId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "description",
+          "display",
+          "isGrantable",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Quest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdById": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "createdById",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "QuestRequirements": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "questId": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          },
+          "items": {},
+          "skills": {},
+          "quests": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "questId",
+          "level",
+          "items",
+          "skills",
+          "quests",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "QuestRewards": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "questId": {
+            "type": "string"
+          },
+          "experience": {
+            "type": "number"
+          },
+          "gold": {
+            "type": "number"
+          },
+          "items": {},
+          "skills": {},
+          "titles": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "questId",
+          "experience",
+          "gold",
+          "items",
+          "skills",
+          "titles",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Region": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "RegionalDish": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "regionId": {
+            "type": "string"
+          },
+          "dish": {
+            "type": "string"
+          },
+          "rarity": {
+            "type": "string"
+          },
+          "bonusDuration": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "regionId",
+          "dish",
+          "rarity",
+          "bonusDuration",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "RegionalDishBonus": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "regionalDishId": {
+            "type": "string"
+          },
+          "bonusCategory": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "mythicBonus": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "regionalDishId",
+          "bonusCategory",
+          "value",
+          "mythicBonus",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "RegionalIngredient": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "regionId": {
+            "type": "string"
+          },
+          "ingredient": {
+            "type": "string"
+          },
+          "rarity": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "regionId",
+          "ingredient",
+          "rarity",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Spell": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "minLevel": {
+            "type": "number"
+          },
+          "element": {
+            "type": "string"
+          },
+          "skillType": {
+            "type": "string"
+          },
+          "attackType": {
+            "type": "string"
+          },
+          "manaCost": {
+            "type": "number"
+          },
+          "cooldown": {
+            "type": "number"
+          },
+          "castTime": {
+            "type": "number"
+          },
+          "range": {
+            "type": "number"
+          },
+          "areaOfEffect": {
+            "type": "number"
+          },
+          "effect": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "minLevel",
+          "element",
+          "attackType",
+          "manaCost",
+          "cooldown",
+          "castTime",
+          "range",
+          "areaOfEffect",
+          "effect",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MessageLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "senderId": {
+            "type": "string"
+          },
+          "recipientId": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "isFlagged": {
+            "type": "boolean"
+          },
+          "isFiltered": {
+            "type": "boolean"
+          },
+          "badWords": {},
+          "moderatorId": {
+            "type": "string"
+          },
+          "moderationNote": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "messageType",
+          "content",
+          "isFlagged",
+          "isFiltered",
+          "badWords",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ProfanityPattern": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "pattern",
+          "severity",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Role": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "RolePermission": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "roleId": {
+            "type": "string"
+          },
+          "permission": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "roleId",
+          "permission",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "WorldConfig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "WorldConfigSetting": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "worldConfigId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "worldConfigId",
+          "name",
+          "value",
+          "createdAt",
+          "updatedAt"
+        ]
+      }
+    }
+  }
+}

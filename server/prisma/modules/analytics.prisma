@@ -1,0 +1,45 @@
+// ---------------------------------------
+//  Analytics Models
+// ---------------------------------------
+
+model EconomySnapshot {
+  id             String   @id @default(cuid())
+  takenAt        DateTime @default(now())
+  totalGold      Int      @default(0)
+  totalItems     Int      @default(0)
+  activeAuctions Int      @default(0)
+  activeListings Int      @default(0)
+  metadata       Json? // { sinks: {...}, sources: {...} }
+}
+
+model HeatmapEvent {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  mapId     String
+  map       Map      @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  x         Int
+  y         Int
+  eventType String // "MOVE", "DEATH", "KILL", etc.
+  createdAt DateTime @default(now())
+}
+
+model PlayerSessionLog {
+  id            String    @id @default(cuid())
+  playerId      String
+  player        Player    @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  loginAt       DateTime
+  logoutAt      DateTime?
+  ipAddress     String?
+  clientVersion String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ServerMetric {
+  id         String   @id @default(cuid())
+  name       String // e.g. "online_players", "combat_sessions"
+  value      Float
+  tags       Json? // { shard: "us-east-1", node: "game-1" }
+  recordedAt DateTime @default(now())
+}

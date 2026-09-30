@@ -1,0 +1,14 @@
+// server/tsconfig.paths.json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@auth/*": ["src/auth/*"],
+      "@core/*": ["src/core/*"],
+      "@email/*": ["src/email/*"],
+      "@prisma": ["src/db/client.ts"],
+      "@shared/*": ["../shared/*"]
+    },
+    "ignoreDeprecations": "6.0"
+  }
+}

@@ -1,0 +1,29 @@
+// client/tsconfig.app.json
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    // TS 6+ module system
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    // React + Vite
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+
+    // Vite handles emit
+    "noEmit": true,
+
+    // Monorepo shared imports
+    "paths": {
+      "@shared/*": ["../shared/*"]
+    },
+
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["src"]
+}

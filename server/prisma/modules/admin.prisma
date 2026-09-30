@@ -1,0 +1,32 @@
+// ---------------------------------------
+//  Admin Tools Models
+// ---------------------------------------
+
+model AdminActionLog {
+  id                   String          @id @default(cuid())
+  gmId                 String
+  targetId             String?
+  actionType           String
+  payload              Json
+  createdAt            DateTime        @default(now())
+}
+
+model Ban {
+  id                   String          @id @default(cuid())
+  playerId             String
+  player               Player          @relation("Banned", fields: [playerId], references: [id])
+  reason               String
+  expiresAt            DateTime?
+  createdById          String          // GM / admin account
+  createdAt            DateTime        @default(now())
+}
+
+model Mute {
+  id                   String          @id @default(cuid())
+  playerId             String
+  player               Player          @relation("Muted", fields: [playerId], references: [id])
+  reason               String
+  expiresAt            DateTime?
+  createdAt            DateTime        @default(now())
+  createdById          String
+}

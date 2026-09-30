@@ -1,0 +1,26 @@
+name: Prisma Schema Diff
+
+on:
+  pull_request:
+    paths:
+      - "../../server/prisma"
+      - "../../tools/prisma_schema_diff.ts"
+
+jobs:
+  schema-diff:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Prisma schema diff
+        run: npm run schema:diff

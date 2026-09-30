@@ -1,0 +1,128 @@
+// ---------------------------------------
+//  Markets, Auctions, Stores, and Trading Models
+// ---------------------------------------
+
+model Auction {
+  id              String        @id @default(cuid())
+  sellerId        String
+  seller          Player        @relation("AuctionSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  inventoryItemId String
+  inventoryItem   InventoryItem @relation("AuctionItems", fields: [inventoryItemId], references: [id], onDelete: Restrict)
+  quantity        Int           @default(1)
+  startingBid     Int
+  buyoutPrice     Int?
+  currentBidId    String?       @unique
+  currentBid      AuctionBid?   @relation("CurrentBid", fields: [currentBidId], references: [id], onDelete: Cascade)
+  endsAt          DateTime
+  isActive        Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  // bi-directional relationships
+  auctionBids     AuctionBid[]  @relation("AuctionBids")
+
+  @@index([sellerId])
+  @@index([inventoryItemId])
+}
+
+model AuctionBid {
+  id        String   @id @default(cuid())
+  auctionId String
+  auction   Auction  @relation("AuctionBids", fields: [auctionId], references: [id], onDelete: Cascade)
+  bidderId  String
+  bidder    Player   @relation("AuctionBidders", fields: [bidderId], references: [id], onDelete: Cascade)
+  amount    Int
+  createdAt DateTime @default(now())
+
+  // reverse relation for currentBid
+  currentFor Auction? @relation("CurrentBid")
+
+  @@index([auctionId])
+  @@index([bidderId])
+  @@index([auctionId, amount])
+  @@index([auctionId, createdAt])
+}
+
+model MarketListing {
+  id         String        @id @default(cuid())
+  sellerId   String
+  seller     Player        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  itemId     String
+  item       InventoryItem @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  price      Int           @default(0)
+  quantity   Int           @default(1)
+  isBuyOrder Boolean       @default(false)
+  isActive   Boolean       @default(true)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@index([isActive])
+  @@index([itemId, isBuyOrder])
+  @@index([sellerId])
+}
+
+model NpcStore {
+  id          String         @id @default(cuid())
+  npcId       String
+  name        String
+  description String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  items       NpcStoreItem[]
+}
+
+model NpcStoreItem {
+  id        String   @id @default(cuid())
+  storeId   String
+  store     NpcStore @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  itemId    String
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  buyPrice  Int // price player pays to buy from NPC
+  sellPrice Int // price NPC pays to buy from player
+  stock     Int? // null = infinite
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Trade {
+  id           String      @id @default(cuid())
+  fromPlayerId String
+  fromPlayer   Player      @relation("TradeFromPlayer", fields: [fromPlayerId], references: [id], onDelete: Cascade)
+  toPlayerId   String
+  toPlayer     Player      @relation("TradeToPlayer", fields: [toPlayerId], references: [id], onDelete: Cascade)
+  items        TradeItem[]
+  status       TradeStatus @default(PENDING)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([status])
+}
+
+enum TradeDirection {
+  FROM
+  TO
+}
+
+model TradeItem {
+  id        String         @id @default(cuid())
+  tradeId   String
+  trade     Trade          @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+  itemId    String
+  item      InventoryItem  @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  ownerId   String
+  owner     Player         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  direction TradeDirection @default(FROM)
+  quantity  Int            @default(1)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([tradeId])
+  @@index([ownerId])
+  @@index([itemId])
+}
+
+enum TradeStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}

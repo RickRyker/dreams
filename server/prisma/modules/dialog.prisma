@@ -1,0 +1,206 @@
+// ---------------------------------------
+//  Dialog Module
+// ---------------------------------------
+
+model Dialog {
+  id                String            @id @default(cuid())
+  title             String            @default("Bob") // Name of the NPC or scene
+  displayMode       DialogDisplayMode @default(OVERHEAD)
+  pages             DialogPage[]
+  chatBotId         String?
+  chatBot           ChatBot?          @relation("ChatBotDialogs", fields: [chatBotId], references: [id], onDelete: SetNull)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  // bi-directional relationships
+  linkedFromDialogs DialogLink[]      @relation("LinkToDialog")
+
+  @@index([chatBotId])
+  @@index([title])
+}
+
+model DialogAction {
+  id       String      @id @default(cuid())
+  pageId   String?
+  page     DialogPage? @relation(fields: [pageId], references: [id])
+  sequence Int         @default(0)
+
+  conditions DialogCondition[] // AND'ed conditions
+  action     DialogActionType  @default(ADD_GOLD)
+
+  // Quest variable manipulation
+  questId   String?
+  variable1 String?
+  variable2 String?
+  text      String?
+  numberAmt Int?
+  floatAmt  Float?
+
+  // Item / recipe / stat / skill
+  slug  String? // item slug, recipe slug, monster slug, stat slug
+  skill String? // skill name
+
+  // Movement
+  mapId String?
+  x     Int?
+  y     Int?
+
+  // UI
+  message  String?
+  sound    String?
+  music    String?
+  cutscene String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([pageId, sequence])
+  @@index([pageId])
+  @@index([action])
+}
+
+enum DialogActionType {
+  // Player Progressions Actions
+  ADD_XP
+  ADD_GOLD
+  ADD_ITEM
+  REMOVE_ITEM
+  ADD_RECIPE
+  ADD_SKILL
+  ADD_STAT
+
+  // Quest Variable Manipulation
+  SET_VARIABLE
+  ADD_VALUE_TO_VARIABLE
+  MULTIPLY_VARIABLE
+  ADD_VARIABLE_TO_VARIABLE
+  SET_VARIABLE_TO_CURRENT_TIME
+  PUT_CURRENT_DATE_IN_VARIABLE
+  PUT_CURRENT_TIME_IN_VARIABLE
+  CLEAR_VARIABLE
+
+  // Quest State Management
+  START_QUEST
+  COMPLETE_QUEST
+  FAIL_QUEST
+  RESET_QUEST
+
+  // Player Movement / World Interaction
+  MOVE_PLAYER_TO_MAP
+  MOVE_PLAYER_TO_COORDS
+  RETURN_PLAYER_TO_PREVIOUS_LOCATION
+  SET_RESPAWN_POINT
+
+  // Combat Actions
+  PREPARE_COMBAT_MONSTER
+  START_COMBAT
+  START_COMBAT_GROUP
+
+  // Player Status Effects
+  APPLY_EFFECT
+  REMOVE_EFFECT
+}
+
+model DialogCondition {
+  id        String                  @id @default(cuid())
+  partId    String?
+  part      DialogPart?             @relation(fields: [partId], references: [id])
+  actionId  String?
+  action    DialogAction?           @relation(fields: [actionId], references: [id])
+  linkId    String?
+  link      DialogLink?             @relation(fields: [linkId], references: [id])
+  questId   String
+  quest     Quest                   @relation(fields: [questId], references: [id])
+  variable  String
+  operator  DialogConditionOperator @default(EQ)
+  value     String
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+
+  @@index([actionId])
+  @@index([linkId])
+  @@index([partId])
+}
+
+enum DialogConditionOperator {
+  EQ
+  NE
+  GT
+  LT
+  GTE
+  LTE
+  CONTAINS
+  NOT_CONTAINS
+  STARTS_WITH
+  ENDS_WITH
+}
+
+enum DialogDisplayMode {
+  FULLSCREEN
+  OVERHEAD
+}
+
+model DialogLink {
+  id         String            @id @default(cuid())
+  pageId     String?
+  page       DialogPage?       @relation(fields: [pageId], references: [id])
+  sequence   Int?
+  conditions DialogCondition[] // all conditions must be satisfied to show the link
+  dialogId   String? // Change the mappers page
+  dialog     Dialog?           @relation("LinkToDialog", fields: [dialogId], references: [id])
+  mapId      String? // Move the player to this map
+  map        Map?              @relation("LinkToMap", fields: [mapId], references: [id])
+  x          Int? // Move the player to this map location
+  y          Int? // Move the player to this map location
+  leave      Boolean? // return the player to where they came from
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@unique([pageId, sequence])
+  @@index([pageId])
+}
+
+model DialogLock {
+  dialogId  String   @id
+  editorId  String
+  updatedAt DateTime @updatedAt
+}
+
+model DialogPage {
+  id        String         @id @default(cuid())
+  dialogId  String
+  dialog    Dialog         @relation(fields: [dialogId], references: [id])
+  sequence  Int            @default(0) // first page is always 0 (default)
+  imageUrl  String? // url of the image to display
+  parts     DialogPart[]
+  actions   DialogAction[]
+  links     DialogLink[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@unique([dialogId, sequence])
+  @@index([dialogId])
+}
+
+model DialogPart {
+  id         String            @id @default(cuid())
+  pageId     String?
+  page       DialogPage?       @relation(fields: [pageId], references: [id])
+  sequence   Int               @default(0)
+  conditions DialogCondition[] // all conditions must be satisfied to show the part
+  text       String
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@unique([pageId, sequence])
+  @@index([pageId])
+}
+
+model DialogSnapshot {
+  id        String   @id @default(cuid())
+  dialogId  String
+  editorId  String
+  snapshot  String // JSON
+  createdAt DateTime @default(now())
+
+  @@index([dialogId])
+}

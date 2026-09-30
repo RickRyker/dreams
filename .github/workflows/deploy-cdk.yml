@@ -1,0 +1,43 @@
+name: Deploy CDK Stack
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-cdk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build shared + infra
+        run: npx tsc -b shared infrastructure
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
+      - name: CDK Synth
+        working-directory: infrastructure
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "us-east-1"
+        run: cdk synth
+
+      - name: CDK Deploy
+        working-directory: infrastructure
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "us-east-1"
+        run: cdk deploy --all --require-approval never

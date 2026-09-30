@@ -1,0 +1,296 @@
+// ---------------------------------------
+//  Combat Module
+// ---------------------------------------
+
+// Later, we will migrate the abilities from code to this table.
+// Monsters. pets, and players will all have abilities that are defined in this table.
+model Ability {
+  id         String @id @default(cuid())
+  slug       String @unique
+  name       String
+  school     String // FIRE, ICE, ARCANE, etc.
+  effectType String // DAMAGE, HEAL, DOT, etc.
+
+  castTimeMs   Int
+  cooldownMs   Int
+  resourceCost Int?
+  range        Int?
+
+  isInstant Boolean @default(false)
+  isChannel Boolean @default(false)
+
+  baseAmount     Int?
+  durationMs     Int?
+  tickIntervalMs Int?
+
+  // JSON for telegraph metadata
+  telegraph Json?
+
+  // JSON for tags
+  tags Json?
+
+  // versioning for balancing
+  version   Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  monsterAbilities MonsterAbility[]
+}
+
+enum AttackType {
+  MELEE
+  RANGED
+  MAGIC
+}
+
+enum CastStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+  INTERRUPTED
+}
+
+model CombatCast {
+  id        String @id @default(cuid())
+  combatId  String
+  casterId  String
+  spellSlug String
+
+  startedAt DateTime
+  endsAt    DateTime
+
+  // optional: reason for end (completed, cancelled, interrupted)
+  status CastStatus @default(PENDING)
+
+  // denormalized telegraph data (so we don't have to re-lookup ability)
+  telegraphShape  TelegraphShape? // see below
+  telegraphRadius Int?
+  telegraphAngle  Int?
+  telegraphLength Int?
+  telegraphWidth  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  combatParticipant CombatParticipant @relation("CombatParticipantCasts", fields: [casterId], references: [id])
+
+  @@index([combatId])
+  @@index([casterId])
+}
+
+model CombatLogEntry {
+  id       String        @id @default(cuid())
+  combatId String
+  combat   CombatSession @relation(fields: [combatId], references: [id], onDelete: Cascade)
+
+  type      String // "DAMAGE", "HEAL", "CAST_START", etc.
+  actorId   String?
+  actorType ParticipantType?
+  targetId  String?
+  message   String
+  data      Json?
+  seq       Int              @default(0)
+  createdAt DateTime         @default(now())
+
+  @@index([combatId, seq])
+}
+
+model CombatLoot {
+  id            String            @id @default(cuid())
+  participantId String
+  participant   CombatParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  itemId        String
+  item          Item              @relation(fields: [itemId], references: [id])
+  qty           Int
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@unique([participantId, itemId])
+  @@index([participantId])
+  @@index([itemId])
+}
+
+model CombatParticipant {
+  id                  String          @id @default(cuid())
+  combatId            String
+  combat              CombatSession   @relation("CombatParticipants", fields: [combatId], references: [id], onDelete: Cascade)
+  participantType     ParticipantType @default(PLAYER) // MONSTER, PET, or PLAYER
+  playerId            String?
+  player              Player?         @relation("CombatPlayer", fields: [playerId], references: [id])
+  petId               String?
+  pet                 PlayerPet?      @relation("CombatPet", fields: [petId], references: [id])
+  monsterId           String?
+  monster             Monster?        @relation("CombatMonster", fields: [monsterId], references: [id])
+  activeTurnOf        CombatSession?  @relation("ActiveTurn")
+  name                String? // derived from either monster, pet, or player at the time the CombatParticipant was created.
+  corpseName          String? // derived from what produced the corpse (monster, pet, or player)
+  tier                Int             @default(0) // generated when combat begins; adds to all stats the higher the tier
+  hp                  Int             @default(1)
+  maxHp               Int             @default(1)
+  mp                  Int             @default(0)
+  maxMp               Int             @default(0)
+  strength            Int             @default(1)
+  dexterity           Int             @default(1)
+  intelligence        Int             @default(1)
+  charisma            Int             @default(1)
+  elementAffinity     ElementType     @default(NONE)
+  critChance          Float           @default(0.05)
+  critDamage          Float           @default(1.5)
+  critResistance      Float           @default(0.0)
+  damageReduction     Float           @default(0.0)
+  spellResistance     Float           @default(0.0)
+  elementResistances  Json?           @default("{}")
+  abilityCooldowns    Json?           @default("{}")
+  shield              Int             @default(0)
+  initiative          Int             @default(0)
+  x                   Int             @default(10)
+  y                   Int             @default(10)
+  facingDeg           Int             @default(0)
+  hasActed            Boolean         @default(false)
+  isAlive             Boolean         @default(true)
+  isInvisible         Boolean         @default(false)
+  gold                Int             @default(0)
+  loot                CombatLoot[]
+  isLooted            Boolean         @default(false)
+  gcdSeconds          Int             @default(1500) // 1.5s default GCD in ms
+  globalCooldownUntil DateTime?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  // bi-directional relations for easier querying
+  threatAsMonster     CombatThreat[]  @relation("ThreatMonster")
+  threatAsTarget      CombatThreat[]  @relation("ThreatTarget")
+  combatCasts         CombatCast[]     @relation("CombatParticipantCasts")
+
+  @@unique([combatId, playerId])
+  @@unique([combatId, petId])
+  // Note: Monsters can appear multiple times in the same combat, so no unique constraint on monsterId
+  @@index([combatId])
+  @@index([participantType])
+  @@index([playerId])
+  @@index([petId])
+  @@index([monsterId])
+}
+
+model CombatReplay {
+  id        String   @id @default(cuid())
+  combatId  String   @unique
+  summary   Json
+  frames    Json
+  createdAt DateTime @default(now())
+}
+
+model CombatSession {
+  id                   String                @id @default(cuid())
+  mapId                String
+  map                  Map                   @relation(fields: [mapId], references: [id])
+  turnPhase            ParticipantType       @default(PLAYER) // PLAYER, PET, MONSTER
+  activeTurnId         String?               @unique
+  activeTurn           CombatParticipant?    @relation("ActiveTurn", fields: [activeTurnId], references: [id])
+  participants         CombatParticipant[]   @relation("CombatParticipants")
+  players              Player[]              @relation("ActiveCombat")
+  toHitBonus           Float                 @default(0.0)
+  isActive             Boolean               @default(true)
+  startTime            DateTime              @default(now())
+  turnTimeoutSeconds   Int                   @default(20)
+  roundNumber          Int                   @default(1)
+  turnIndex            Int                   @default(0)
+  lastTurnAt           DateTime              @default(now())
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  // bi-directional relation for easier querying
+  combatEvents         CombatLogEntry[]
+  combatThreats        CombatThreat[]
+  combatTimelineEvents CombatTimelineEvent[]
+
+  @@index([mapId]) // could be multiple combats on the same map, but unlikely to be more than a few at a time
+}
+
+model CombatSnapshot {
+  id         String   @id @default(cuid())
+  combatId   String
+  timestamp  BigInt // engine timestamp (ms)
+  eventType  String // DAMAGE, HEAL, CAST_START, etc.
+  event      Json // raw EngineCombatEvent
+  resolution Json // EngineCombatResolution
+  entities   Json // EngineEntitySnapshot[]
+  createdAt  DateTime @default(now())
+
+  // Snapshots are immutable historical records — they should not break if a participant is deleted.
+  @@index([combatId, timestamp])
+}
+
+model CombatThreat {
+  id        String            @id @default(cuid())
+  combatId  String
+  combat    CombatSession     @relation(fields: [combatId], references: [id], onDelete: Cascade)
+  monsterId String
+  monster   CombatParticipant @relation("ThreatMonster", fields: [monsterId], references: [id], onDelete: Cascade)
+  targetId  String
+  target    CombatParticipant @relation("ThreatTarget", fields: [targetId], references: [id], onDelete: Cascade)
+  value     Int               @default(0)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@unique([monsterId, targetId])
+  @@index([combatId, monsterId])
+}
+
+model CombatTimelineEvent {
+  id            String        @id @default(cuid())
+  combatId      String
+  combat        CombatSession @relation(fields: [combatId], references: [id], onDelete: Cascade)
+  participantId String?
+  timestamp     DateTime // when this event is scheduled to occur
+  // semantic type, aligned with your Zod validator
+  type          String // e.g. "CAST_START", "CAST_END", "DOT_TICK", ...
+  label         String? // "Fireball", "Poison Tick", etc.
+  value         Float? // optional numeric payload (damage, heal, etc.)
+  telegraph     Json? // shape, radius, etc.
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([combatId, timestamp])
+}
+
+enum EffectType {
+  AURA
+  BUFF // Temporary Stat Increase
+  DEBUFF // Temporary Stat Decrease
+  DOT // Damage Over Time
+  HASTE
+  HOT // Heal Over Time
+  KNOCKBACK
+  SHIELD
+  SILENCE
+  SLEEP
+  SLOW
+  STUN
+  TAUNT
+  OTHER
+}
+
+enum ElementType {
+  NONE
+  AIR
+  DEATH
+  EARTH
+  FIRE
+  ICE
+  LIGHTNING
+  NATURE
+  POISON
+  SHADOW
+  SPIRIT
+  WATER
+}
+
+enum ParticipantType {
+  MONSTER
+  NPC
+  PET
+  PLAYER
+}
+
+enum TelegraphShape {
+  CIRCLE
+  CONE
+  RECTANGLE
+}

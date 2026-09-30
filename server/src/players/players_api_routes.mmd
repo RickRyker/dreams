@@ -1,0 +1,97 @@
+flowchart TD
+
+    %% ============================
+    %% ROUTERS
+    %% ============================
+    subgraph Routers
+        BuffR[PlayerBuffRouter<br/>/players/buff]
+        CombatR[PlayerCombatStateRouter<br/>/players/combat]
+        CreationR[PlayerCreationRouter<br/>/players/create]
+        DeathR[PlayerDeathRouter<br/>/players/death]
+        DeleteR[PlayerDeleteRouter<br/>/players/delete]
+        EconR[PlayerEconomyRouter<br/>/players/econ]
+        EquipR[PlayerEquipmentRouter<br/>/players/equip]
+        HydrationR[PlayerHydrationRouter<br/>/players/full]
+        ListR[PlayerListRouter<br/>/players/list]
+        MoveR[PlayerMovementRouter<br/>/players/move]
+        QuestR[PlayerQuestsRouter<br/>/players/quest]
+        SaveR[PlayerSaveRouter<br/>/players/save]
+        SelectR[PlayerSelectionRouter<br/>/players/select]
+        TeleportR[PlayerTeleportRouter<br/>/players/teleport]
+    end
+
+    %% ============================
+    %% CONTROLLERS
+    %% ============================
+    subgraph Controllers
+        BuffC[PlayerBuffController]
+        CombatC[PlayerCombatStateController]
+        CreationC[PlayerCreationController]
+        DeathC[PlayerDeathController]
+        DeleteC[PlayerDeleteController]
+        EconC[PlayerEconomyController]
+        EquipC[PlayerEquipmentController]
+        HydrationC[PlayerFullHydrationController]
+        ListC[PlayerListController]
+        MoveC[PlayerMovementController]
+        QuestC[PlayerQuestsController]
+        SaveC[PlayerSaveController]
+        SelectC[PlayerSelectionController]
+        TeleportC[PlayerTeleportController]
+    end
+
+    %% ============================
+    %% SERVICES
+    %% ============================
+    subgraph Services
+        BuffS[PlayerBuffService]
+        CombatS[PlayerCombatStateService]
+        CreationS[PlayerCreationService]
+        DeathS[PlayerDeathService]
+        DeleteS[PlayerDeleteService]
+        EconS[PlayerEconomyService]
+        EquipS[PlayerEquipmentService]
+        HydrationS[PlayerHydrationService]
+        ListS[PlayerListService]
+        MoveS[PlayerMovementService]
+        QuestS[PlayerQuestsService]
+        SaveS[PlayerSaveService]
+        SelectS[PlayerSelectionService]
+        TeleportS[PlayerTeleportService]
+    end
+
+    %% ============================
+    %% ROUTER → CONTROLLER LINKS
+    %% ============================
+    BuffR --> BuffC
+    CombatR --> CombatC
+    CreationR --> CreationC
+    DeathR --> DeathC
+    DeleteR --> DeleteC
+    EconR --> EconC
+    EquipR --> EquipC
+    HydrationR --> HydrationC
+    ListR --> ListC
+    MoveR --> MoveC
+    QuestR --> QuestC
+    SaveR --> SaveC
+    SelectR --> SelectC
+    TeleportR --> TeleportC
+
+    %% ============================
+    %% CONTROLLER → SERVICE LINKS
+    %% ============================
+    BuffC --> BuffS
+    CombatC --> CombatS
+    CreationC --> CreationS
+    DeathC --> DeathS
+    DeleteC --> DeleteS
+    EconC --> EconS
+    EquipC --> EquipS
+    HydrationC --> HydrationS
+    ListC --> ListS
+    MoveC --> MoveS
+    QuestC --> QuestS
+    SaveC --> SaveS
+    SelectC --> SelectS
+    TeleportC --> TeleportS

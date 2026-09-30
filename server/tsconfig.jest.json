@@ -1,0 +1,13 @@
+// server/tsconfig.jest.json
+{
+  "extends": "./tsconfig.paths.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["**/*.test.ts", "**/*.test.tsx"]
+}

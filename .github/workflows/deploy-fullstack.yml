@@ -1,0 +1,78 @@
+name: Fullstack Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: "Environment to deploy"
+        options:
+          - dev
+          - stage
+          - prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build all packages
+        run: npx tsc -b
+
+      # -------------------------
+      # CLIENT BUILD + DEPLOY
+      # -------------------------
+      - name: Build client
+        working-directory: client
+        run: npm run build
+
+      - name: Deploy UI to S3
+        working-directory: client
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          UI_BUCKET: ${{ secrets.UI_BUCKET }}
+        run: |
+          aws s3 sync dist s3://$UI_BUCKET --delete
+
+      # -------------------------
+      # SERVER BUILD + DEPLOY
+      # -------------------------
+      - name: Build server
+        working-directory: server
+        run: npm run build
+
+      - name: Deploy server
+        working-directory: server
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: npm run deploy
+
+      # -------------------------
+      # CDK DEPLOY
+      # -------------------------
+      - name: Install CDK
+        run: npm install -g aws-cdk
+
+      - name: CDK Deploy
+        working-directory: infrastructure
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CDK_ACCOUNT: ${{ secrets.CDK_ACCOUNT }}
+          CDK_REGION: ${{ secrets.CDK_REGION }}
+        run: cdk deploy --all --require-approval never

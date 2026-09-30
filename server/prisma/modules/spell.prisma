@@ -1,0 +1,27 @@
+// ---------------------------------------
+//  Spell Related Enums and Models
+// ---------------------------------------
+
+model Spell {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  description  String?
+  // Requirements
+  minLevel     Int           @default(0)
+  // Classification
+  element      ElementType   @default(NONE)
+  skillSlug    String?
+  attackType   AttackType    @default(MAGIC) // melee, ranged, magic, etc.
+  // Core mechanics
+  manaCost     Int           @default(0)
+  cooldown     Int           @default(0) // milliseconds
+  castTime     Int           @default(0) // milliseconds
+  range        Int           @default(1)
+  areaOfEffect Int           @default(0)
+  // Damage / healing / effects stored as JSON:
+  effect       Json // { baseDamage: 12, scaling: { stat: "int", ratio: 0.4 }, status: "burn" }
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  playerSpells PlayerSpell[] // bi-directional relationship
+}

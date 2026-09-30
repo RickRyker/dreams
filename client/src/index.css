@@ -1,0 +1,285 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-background: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  /* Nowhere-Else Theme Variables */
+  --primary-glow: #00f3ff;
+  --glitch-intensity: 0;
+  --stability: 1; /* 0 for reduced motion */
+  --scanline-pos: 0%;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #000000;
+    --border: #1a1a1a;
+    --code-bg: #0a0a0a;
+    --accent: var(--primary-glow);
+    --accent-bg: rgba(0, 243, 255, 0.05);
+    --accent-border: rgba(0, 243, 255, 0.2);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 243, 255, 0.1) 0 0 15px;
+  }
+}
+
+ #social .button-icon {
+   filter: invert(1) brightness(2);
+ }
+
+#root {
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  text-align: initial;
+  border-inline: none;
+  min-height: 100vh;
+  display: block;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #000;
+  overflow: hidden;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+/* Global CRT/Scanline Overlay */
+body::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(99deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 9999;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+body::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.1);
+  opacity: 0;
+  z-index: 10000;
+  pointer-events: none;
+  animation: flicker 0.1s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.27861; }
+  5% { opacity: 0.34769; }
+  10% { opacity: 0.23604; }
+  /* ... more frames if needed ... */
+  100% { opacity: 0.27861; }
+}
+
+.theme-admin {
+  --primary-glow: #ff0000;
+  --accent-bg: rgba(255, 0, 0, 0.1);
+  --accent-border: rgba(255, 0, 0, 0.5);
+}
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+}
+
+.glitch-text::after {
+  left: 2px;
+  text-shadow: -1px 0 red;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+
+.glitch-text::before {
+  left: -2px;
+  text-shadow: 2px 0 blue;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim2 3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(31px, 9999px, 94px, 0); }
+  20% { clip: rect(62px, 9999px, 42px, 0); }
+  /* ... etc ... */
+}
+
+.combat-timeline {
+  position: relative;
+  width: 100%;
+  height: 24px;
+}
+
+.combat-timeline-bar {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+}
+
+.combat-timeline-marker {
+  position: absolute;
+  top: -4px;
+  width: 6px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.combat-timeline-marker.dot {
+  background: #ff5555;
+}
+
+.combat-timeline-marker.hot {
+  background: #55ff55;
+}
+
+.telegraph {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(255, 0, 0, 0.25);
+  border: 2px solid rgba(255, 0, 0, 0.7);
+  border-radius: 9999px;
+  opacity: 0;
+  animation: telegraph-fade 0.25s forwards;
+}
+
+.telegraph-circle {
+  border-radius: 50%;
+}
+
+.telegraph-cone,
+.telegraph-line {
+  border-radius: 4px;
+}
+
+@keyframes telegraph-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* optional fade-out class */
+.telegraph--fading-out {
+  animation: telegraph-fade-out 0.25s forwards;
+}
+
+@keyframes telegraph-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.combat-timeline-marker.cast {
+  background: #ffcc00;
+}

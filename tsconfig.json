@@ -1,0 +1,11 @@
+// root/tsconfig.json
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./shared" },
+    { "path": "./server" },
+    { "path": "./infrastructure" },
+    { "path": "./client" }
+  ]
+}

@@ -1,0 +1,31 @@
+// infrastructure/tsconfig.json
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+    "types": ["node"],
+
+    // Modern TS 6+ module system
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    // CDK + Node runtime
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+
+    // Shared imports
+    "paths": {
+      "@shared/*": ["../shared/*"]
+    },
+
+    "ignoreDeprecations": "5.0"
+  },
+  "include": ["bin", "lib"],
+  "exclude": ["dist", "node_modules"],
+  "references": [
+    { "path": "../shared" }
+  ]
+}

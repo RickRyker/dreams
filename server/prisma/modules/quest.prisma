@@ -1,0 +1,136 @@
+// ---------------------------------------
+//  Quest Core
+// ---------------------------------------
+
+model Quest {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  name             String
+  description      String?
+  requirementLevel Int      @default(0) // minimum level required to accept the quest
+  createdById      String
+  createdBy        Player   @relation("CreatedQuests", fields: [createdById], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // normalized requirements & rewards
+  requirementItems  QuestRequirementItem[]
+  requirementSkills QuestRequirementSkill[]
+  requirementQuests QuestRequirementQuest[] @relation("QuestRequirementQuest_quest")
+  rewardItems       QuestRewardItem[]
+  rewardSkills      QuestRewardSkill[]
+  rewardTitles      QuestRewardTitle[]
+  dependencies      QuestDependency[]       @relation("QuestDependency_quest")
+  // reverse dependency (quests that depend on this quest)
+  dependedOnBy      QuestDependency[]       @relation("QuestDependency_dependsOn")
+  // bi-directional relationships
+  dialogConditions  DialogCondition[]
+  playerQuests      PlayerQuest[]
+  requiredByQuests  QuestRequirementQuest[] @relation("QuestRequirementQuest_required")
+  requirementLevels QuestRequirementLevel[]
+
+  @@index([slug])
+  @@index([createdById])
+}
+
+enum QuestStatusType {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+// ---------------------------------------
+//  Requirements
+// ---------------------------------------
+
+model QuestRequirementLevel {
+  id      String @id @default(cuid())
+  questId String
+  quest   Quest  @relation(fields: [questId], references: [id])
+  level   Int    @default(1)
+
+  @@index([questId])
+}
+
+model QuestRequirementItem {
+  id       String @id @default(cuid())
+  questId  String
+  quest    Quest  @relation(fields: [questId], references: [id])
+  itemSlug String
+  quantity Int    @default(1)
+
+  @@index([questId])
+  @@index([itemSlug])
+}
+
+model QuestRequirementSkill {
+  id        String @id @default(cuid())
+  questId   String
+  quest     Quest  @relation(fields: [questId], references: [id])
+  skillSlug String
+  quantity  Int    @default(1)
+
+  @@index([questId])
+  @@index([skillSlug])
+}
+
+model QuestRequirementQuest {
+  id              String @id @default(cuid())
+  questId         String // quest that has the requirement
+  quest           Quest  @relation("QuestRequirementQuest_quest", fields: [questId], references: [id])
+  requiredQuestId String // quest that is required
+  requiredQuest   Quest  @relation("QuestRequirementQuest_required", fields: [requiredQuestId], references: [id])
+
+  @@index([questId])
+  @@index([requiredQuestId])
+}
+
+// ---------------------------------------
+//  Rewards
+// ---------------------------------------
+
+model QuestRewardItem {
+  id       String @id @default(cuid())
+  questId  String
+  quest    Quest  @relation(fields: [questId], references: [id])
+  itemSlug String
+  quantity Int    @default(1)
+
+  @@index([questId])
+  @@index([itemSlug])
+}
+
+model QuestRewardSkill {
+  id        String @id @default(cuid())
+  questId   String
+  quest     Quest  @relation(fields: [questId], references: [id])
+  skillSlug String
+
+  @@index([questId])
+  @@index([skillSlug])
+}
+
+model QuestRewardTitle {
+  id        String @id @default(cuid())
+  questId   String
+  quest     Quest  @relation(fields: [questId], references: [id])
+  titleSlug String
+
+  @@index([questId])
+  @@index([titleSlug])
+}
+
+// ---------------------------------------
+//  Quest Dependencies (global graph)
+// ---------------------------------------
+
+model QuestDependency {
+  id             String @id @default(cuid())
+  questId        String // quest that depends on another
+  quest          Quest  @relation("QuestDependency_quest", fields: [questId], references: [id])
+  dependsOn      String // quest that is depended on
+  dependsOnQuest Quest  @relation("QuestDependency_dependsOn", fields: [dependsOn], references: [id])
+
+  @@index([questId])
+  @@index([dependsOn])
+}

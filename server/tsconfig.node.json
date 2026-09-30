@@ -1,0 +1,24 @@
+// server/tsconfig.node.config
+{
+  "extends": "./tsconfig.paths.json",
+  "compilerOptions": {
+    "outDir": "dist",
+
+    // Modern TS 6+ module system
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    // Node runtime
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+
+    // Emit enabled (default)
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../shared" }
+  ]
+}

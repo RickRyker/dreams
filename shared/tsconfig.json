@@ -1,0 +1,22 @@
+// shared/tsconfig.json
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "outDir": "dist",
+
+    // Modern TS 6+ module system
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    // Required for monorepo path mapping
+    "paths": {
+      "@shared/*": ["./*"]
+    },
+
+    // Silence TS6 deprecation warnings
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["./"]
+}

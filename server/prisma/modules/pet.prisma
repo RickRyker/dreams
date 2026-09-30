@@ -1,0 +1,62 @@
+// =======================================
+//  Pet Related Models
+// =======================================
+
+enum PetFamilyType {
+  BASIC
+  BEAST
+  ELEMENTAL
+  FLYING
+  LEGENDARY
+  SPIRIT
+  MOUNT
+  WIND
+}
+
+model PetSacrifice {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  petLevel  Int      @default(10) // minimum level for each pet to be considered a match
+  petType1  String // name of PetType
+  petType2  String // name of PetType
+  petType3  String // name of PetType
+  eggSlug   String // matches Item.slug w/ ItemType.PET
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([petType1])
+  @@index([petType2])
+  @@index([petType3])
+}
+
+model PetType {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  name            String        @unique
+  defaultPet      Boolean       @default(false)
+  isMountable     Boolean       @default(false)
+  attackType      AttackType    @default(MELEE)
+  element         ElementType   @default(NONE)
+  family          PetFamilyType @default(BEAST)
+  tier            Int           @default(0)
+  baseHp          Int           @default(0)
+  baseStrength    Int           @default(0)
+  critChance      Float         @default(0.0) // additional crit chance, e.g. 0.05 for +5% crit
+  critDamage      Float         @default(1.5) // additional crit damage multiplier, e.g. 0.5 for +50% crit damage (total 200% with base)
+  critResistance  Float         @default(0.0) // percentage crit resistance, e.g. 0.05 for -5% crit chance against this monster
+  damageReduction Float         @default(0) // percentage damage reduction, e.g. 0.1 for 10% DR
+  spellResistance Float         @default(0) // percentage spell resistance, e.g. 0.1 for 10% SR
+  spriteImage     String?
+  evolvesFrom     String? // slug of PetType that this pet evolves from
+  evolvesTo       String? // slug of PetType that this pet evolves to
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  // bi-directional definition
+  playerPets      PlayerPet[]
+
+  @@index([name])
+  @@index([attackType])
+  @@index([element])
+  @@index([family])
+  @@index([tier])
+}

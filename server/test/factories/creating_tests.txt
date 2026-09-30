@@ -1,0 +1,25 @@
+When you return to the tests, do it in this order
+1. Lock the Prisma schema
+Once the Player/Stats/Class models stop shifting, we can generate stable mocks.
+
+2. Generate a single source of truth mock layer
+Instead of hand‑writing mocks, we’ll build:
+
+server/test/factories/
+  mockPlayer.ts
+  mockPlayerStats.ts
+  mockPlayerClass.ts
+  mockClass.ts
+  mockPlayerWithRelations.ts
+
+Each one typed directly from @prisma/client.
+
+3. Update repositories to return typed shapes
+Services should depend on minimal interfaces:
+
+type PlayerListRepo = Pick<PlayerRepository, "listPlayers">;
+
+This keeps tests small and mocks tiny.
+
+4. Rebuild tests service‑by‑service
+Once the mocks are stable, the tests will be trivial.

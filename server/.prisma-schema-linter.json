@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "id-type": "string-cuid",
+    "field-order": "strict",
+    "relation-fields": "required",
+    "foreign-key-suffix": "Id",
+    "no-implicit-relations": true,
+    "no-mixed-id-types": true
+  }
+}

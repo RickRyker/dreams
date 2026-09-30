@@ -1,0 +1,46 @@
+flowchart TD
+
+  subgraph AccountsModule["Accounts Module"]
+    direction TB
+
+    subgraph Router["Router Layer"]
+      AR["createAccountRouter()"]
+    end
+
+    subgraph Controller["Controller Layer"]
+      AC["AccountController"]
+    end
+
+    subgraph Service["Service Layer"]
+      AS["AccountService"]
+    end
+
+    subgraph Adapter["Adapter Layer"]
+      AA["AccountAdapter"]
+    end
+
+    subgraph Mapper["Mapper Layer"]
+      AM["AccountMapper"]
+    end
+
+    subgraph Validator["Validator Layer"]
+      AV["AccountValidators (Zod)"]
+    end
+
+    subgraph Repo["Repository Layer"]
+      ARP["AccountRepository"]
+    end
+
+    subgraph Prisma["Database Layer"]
+      P["Prisma Client"]
+    end
+  end
+
+  %% Flow
+  AR --> AC
+  AC --> AS
+  AS --> AA
+  AA --> AM
+  AA --> AV
+  AS --> ARP
+  ARP --> P

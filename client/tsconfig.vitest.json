@@ -1,0 +1,19 @@
+// client/tsconfig.vitest.json
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "paths": {
+      "@shared/*": ["../shared/*"]
+    },
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["vitest.config.ts"]
+}

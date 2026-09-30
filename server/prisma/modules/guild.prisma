@@ -1,0 +1,100 @@
+// ---------------------------------------
+//  Guild Enums and Models
+// ---------------------------------------
+
+model Guild {
+  id                   String          @id @default(cuid())
+  name                 String          @unique
+  description          String
+  reputation           Int             @default(0)
+  logs                 GuildLog[]
+  members              GuildMember[]
+  ranks                GuildRank[]
+  treasury             InventoryItem[]
+  founderId            String
+  founder              Player          @relation("GuildFounder", fields: [founderId], references: [id])
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+}
+
+model GuildLog {
+  id                   String          @id @default(cuid())
+  guildId              String
+  guild                Guild           @relation(fields: [guildId], references: [id])
+  type                 GuildLogType    @default(MEMBERS)
+  action               GuildLogActionType  @default(JOINED)
+  playerId             String
+  player               Player          @relation("GuildActionBy", fields: [playerId], references: [id])
+  details              String
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+}
+
+enum GuildLogActionType {
+  JOINED
+  DONATED
+  BORROWED
+  WITHDREW
+  PROMOTED
+  DEMOTED
+  KICKED
+}
+
+enum GuildLogType {
+  MEMBERS
+  TREASURY
+}
+
+model GuildMember {
+  id                   String          @id @default(cuid())
+  guildId              String
+  guild                Guild           @relation(fields: [guildId], references: [id])
+  playerId             String
+  player               Player          @relation(fields: [playerId], references: [id])
+  rankLevel            Int             @default(0)
+  rankId               String
+  rank                 GuildRank       @relation(fields: [rankId], references: [id])
+  credits              Int             @default(0)
+  joinAt               DateTime        @default(now())
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  @@unique([guildId, playerId])
+}
+
+model GuildRank {
+  id                   String          @id @default(cuid())
+  guildId              String
+  guild                Guild           @relation(fields: [guildId], references: [id])
+  level                Int             @default(0)
+  name                 String
+  permissions          GuildPermission[]
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  @@unique([guildId, level])
+  // bi-directional relationships
+  guildMembers         GuildMember[]
+}
+
+model GuildPermission {
+  id                 String          @id @default(cuid())
+  guildRankId        String
+  guildRank          GuildRank       @relation(fields: [guildRankId], references: [id])
+  action             GuildPermissionType
+  permitted          Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  @@unique([guildRankId, action])
+}
+
+enum GuildPermissionType {
+  WITHDRAW_ITEMS
+  WITHDRAW_GOLD
+  INVITE
+  TAG_ITEMS
+  EDIT_DESCRIPTION
+  PROMOTE
+  DEMOTE
+  KICK
+  UNTAG_ITEMS
+  MANAGE_RANKS
+}

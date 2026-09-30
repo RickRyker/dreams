@@ -1,0 +1,164 @@
+// ---------------------------------------
+//  Map Location Related Enums and Models
+// ---------------------------------------
+
+model Location {
+  id              String   @id @default(cuid())
+  mapId           String
+  map             Map      @relation(fields: [mapId], references: [id])
+  x               Int      @default(0)
+  y               Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  // bi-directional relationships
+  recallLocations Player[]
+}
+
+model Map {
+  id               String           @id @default(cuid())
+  regionId         String?
+  region           Region?          @relation(fields: [regionId], references: [id], onDelete: Restrict)
+  name             String
+  description      String
+  height           Int              @default(256)
+  width            Int              @default(256)
+  isLocked         Boolean          @default(false)
+  isSystemMap      Boolean          @default(false)
+  s3JsonUrl        String
+  s3BitmaskUrl     String
+  tiles            MapTile[]
+  events           MapEvent[]
+  actions          MapEventAction[]
+  wildLifeMaxCount Int              @default(5)
+  wildLifeTypes    Json? // {[ 'BEES', 'BIRDS', 'BUTTERFLIES' ]}
+  wildLifeColors   Json? // {[ 'blue', 'green', '0xFF0000' ]}
+  creatorId        String?
+  creator          Player?          @relation("CreatedMaps", fields: [creatorId], references: [id])
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  // bi-directional relationship
+  combats          CombatSession[]
+  containers       Container[]
+  dialogLinks      DialogLink[]     @relation("LinkToMap")
+  locations        Location[]
+  players          Player[]
+  playerDeaths     PlayerDeath[]
+  heatmapEvents    HeatmapEvent[]
+
+  @@index([regionId])
+}
+
+model MapEvent {
+  id        String          @id @default(cuid())
+  mapId     String
+  map       Map             @relation(fields: [mapId], references: [id])
+  x         Int             @default(0)
+  y         Int             @default(0)
+  priority  Int             @default(0)
+  condition Json
+  action    MapEventAction?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model MapEventAction {
+  id         String             @id @default(cuid())
+  mapEventId String             @unique
+  mapEvent   MapEvent           @relation(fields: [mapEventId], references: [id])
+  mapId      String
+  map        Map                @relation(fields: [mapId], references: [id])
+  x          Int                @default(0)
+  y          Int                @default(0)
+  type       MapEventActionType
+  message    String
+  tileId     String
+  // do we need the TileDefinition too?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+}
+
+model MapEventCondition {
+  id        String   @id @default(cuid())
+  scope     String   @default("SYSTEM")
+  variable  String
+  operator  String   @default("==")
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MapEventCompoundCondition {
+  id         String                @id @default(cuid())
+  operator   MapEventLogicOperator
+  conditions Json
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+}
+
+model MapTile {
+  id               String         @id @default(cuid())
+  mapId            String
+  map              Map            @relation(fields: [mapId], references: [id])
+  x                Int            @default(0)
+  y                Int            @default(0)
+  tileDefinitionId String
+  tileDefinition   TileDefinition @relation(fields: [tileDefinitionId], references: [id])
+  isWalkable       Boolean        @default(true)
+  objectType       ObjectType     @default(NONE)
+  terrainType      TerrainType    @default(GRASS)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+enum TerrainType {
+  NONE
+  CAVE
+  CLIFF
+  CLOUD
+  DIRT
+  GRASS
+  ICE
+  LAVA
+  OCEAN
+  ROCK
+  SAND
+  SKY
+  SNOW
+  SNOW_CLIFF
+  SWAMP
+  VOID
+  WATER
+}
+
+model TileDefinition {
+  id              String      @id @default(cuid())
+  name            String
+  tileSetId       String
+  tileSet         TileSet     @relation(fields: [tileSetId], references: [id])
+  x               Int         @default(0)
+  y               Int         @default(0)
+  canBeForeground Boolean     @default(false)
+  isWalkable      Boolean     @default(true)
+  objectType      ObjectType  @default(NONE)
+  terrainType     TerrainType @default(GRASS)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  mapTiles        MapTile[] // bi-directional relationship
+}
+
+model TileSet {
+  id        String           @id @default(cuid())
+  name      String
+  imageUrl  String
+  configUrl String?
+  tileSize  Int
+  tiles     TileDefinition[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+enum WildLifeType {
+  BEE
+  BIRD
+  BUTTERFLY
+}

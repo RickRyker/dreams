@@ -1,0 +1,69 @@
+// ---------------------------------------
+//  Events Related Enums and Models
+// ---------------------------------------
+
+enum EventType {
+  WORLD
+  HOLIDAY
+  SEASONAL
+  BOSS
+}
+
+model Event {
+  id             String               @id @default(cuid())
+  slug           String               @unique
+  name           String
+  description    String
+  type           EventType            @default(WORLD)
+  isHoliday      Boolean              @default(false)
+  startsAt       DateTime
+  endsAt         DateTime
+  isActive       Boolean              @default(false)
+  createdById    String
+  createdBy      Player               @relation("CreatedEvents", fields: [createdById], references: [id])
+  participations EventParticipation[]
+  rewards        EventReward[]
+}
+
+model EventParticipation {
+  id            String   @id @default(cuid())
+  eventId       String
+  event         Event    @relation(fields: [eventId], references: [id])
+  playerId      String
+  player        Player   @relation("PlayerEventParticipation", fields: [playerId], references: [id])
+  progress      Json // { kills: 10, itemsCollected: 3 }
+  completed     Boolean  @default(false)
+  rewardClaimed Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([eventId, playerId])
+}
+
+model EventReward {
+  id         String     @id @default(cuid())
+  eventId    String
+  rewardType RewardType @default(ITEM)
+  title      String?
+  itemId     String?
+  recipeId   String?
+  // questId    String?
+  amount     Int?
+  value      Float?
+  event      Event      @relation(fields: [eventId], references: [id])
+  item       Item?      @relation(fields: [itemId], references: [id])
+  recipe     Recipe?    @relation(fields: [recipeId], references: [id])
+  // title   Title?     @relation(fields: [titleId], references: [id])
+  // quest   Quest?     @relation(fields: [questId], references: [id])
+}
+
+enum RewardType {
+  ITEM
+  XP_BOOST
+  DROP_RATE
+  CURRENCY
+  COSMETIC
+  RECIPE
+  QUEST
+  TITLE
+}

@@ -1,0 +1,103 @@
+// =======================================
+//  Monster Module
+// =======================================
+
+model Monster {
+  id                 String              @id @default(cuid())
+  name               String
+  description        String
+  monsterTypeId      String
+  monsterType        MonsterType         @relation(fields: [monsterTypeId], references: [id])
+  spriteImage        String?
+  element            ElementType         @default(NONE)
+  attackType         AttackType          @default(MELEE)
+  tier               Int                 @default(0) // base tier for generating a combat participant
+  level              Int                 @default(1) // LVL
+  health             Int                 @default(1) // HP
+  mana               Int                 @default(0) // MP
+  strength           Int                 @default(1) // STR
+  dexterity          Int                 @default(1) // DEX
+  intelligence       Int                 @default(1) // INT
+  charisma           Int                 @default(1) // CHA
+  minGold            Int                 @default(1)
+  maxGold            Int                 @default(1)
+  critChance         Float               @default(0.0) // additional crit chance, e.g. 0.05 for +5% crit
+  critDamage         Float               @default(1.5) // additional crit damage multiplier, e.g. 0.5 for +50% crit damage (total 200% with base)
+  critResistance     Float               @default(0.0) // percentage crit resistance, e.g. 0.05 for -5% crit chance against this monster
+  damageReduction    Float               @default(0) // percentage damage reduction, e.g. 0.1 for 10% DR
+  spellResistance    Float               @default(0) // percentage spell resistance, e.g. 0.1 for 10% SR
+  loot               MonsterLootTable[] // defines potential loot drops and their probabilities
+  invasionMonster    Boolean             @default(false)
+  isBoss             Boolean             @default(false)
+  abilities          MonsterAbility[]
+  behavior           Json? // describes AI behavior patterns, e.g., "aggressive", "defensive", "support", etc.
+  /**
+   * example behavior, JSON:
+   * {
+   * "priority": [
+   * "if_hp_below_30_cast_heal",
+   * "if_player_in_range_melee",
+   * "move_toward_highest_threat"
+   * ],
+   * "meleeRange": 1,
+   * "rangedRange": 5
+   * }
+   */
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  // bi-directional relationships
+  combatParticipants CombatParticipant[] @relation("CombatMonster")
+  monsterKillers     PlayerMonsterKill[]
+
+  @@unique([name])
+  @@index([name])
+  @@index([monsterTypeId])
+}
+
+model MonsterAbility {
+  id        String   @id @default(cuid())
+  monsterId String
+  monster   Monster  @relation(fields: [monsterId], references: [id], onDelete: Cascade)
+  abilityId String
+  ability   Ability  @relation(fields: [abilityId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([monsterId, abilityId])
+  @@index([monsterId])
+  @@index([abilityId])
+}
+
+model MonsterLootTable {
+  id        String  @id @default(cuid())
+  monsterId String
+  monster   Monster @relation(fields: [monsterId], references: [id], onDelete: Cascade)
+  itemId    String
+  item      Item    @relation(fields: [itemId], references: [id])
+  minQty    Int
+  maxQty    Int
+  dropRate  Float
+
+  @@unique([monsterId, itemId])
+  @@index([monsterId])
+  @@index([itemId])
+}
+
+model MonsterType {
+  id             String                  @id @default(cuid())
+  name           String
+  description    String
+  attackType     AttackType              @default(MELEE)
+  baseHp         Int                     @default(1)
+  baseStrength   Int                     @default(1)
+  element        ElementType             @default(NONE)
+  spriteImage    String?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  // bi-directional relationships
+  monsters       Monster[]
+  monsterKillers PlayerMonsterTypeKill[]
+
+  @@unique([name])
+  @@index([name])
+}

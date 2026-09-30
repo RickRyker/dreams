@@ -1,0 +1,75 @@
+// ---------------------------------------
+//  Region Module
+// ---------------------------------------
+
+enum BonusCategoryType {
+  NONE // No (known) bonuses
+  VITALITY //	Increases maximum health or health regeneration
+  ENDURANCE //	Reduces stamina drain; increases stamina recovery rate
+  FOCUS // Improves concentration, precision skills, or mana-related stats
+  WARMTH // Resistance to cold environments and weather conditions
+  HEAT_RESISTANCE // Resistance to fire and extreme heat environments
+  FORTITUDE // Damage reduction; resistance to debuffs
+  SPEED // Movement speed and reflex bonuses
+  CHARISMA //	Improved trade prices; faction reputation gain
+  RECOVERY // Shortens status effect durations; aids healing
+  LUCK // Increases rare drop chance; critical success probability
+}
+
+enum IngredientRarityType {
+  COMMON
+  UNCOMMON
+  RARE
+  LEGENDARY
+}
+
+model Region {
+  id          String               @id @default(cuid())
+  slug        String               @unique
+  name        String
+  dishes      RegionalDish[] // signature dishes
+  ingredients RegionalIngredient[] // unique gatherable ingredients (flowers, herbs, ores, woods, etc.)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  // bi-directional relationships
+  maps        Map[]
+}
+
+model RegionalDish {
+  id            String               @id @default(cuid())
+  regionId      String
+  region        Region               @relation(fields: [regionId], references: [id])
+  dish          String // Item.slug
+  rarity        IngredientRarityType @default(COMMON) // affects drop percentages
+  bonuses       RegionalDishBonus[]
+  bonusDuration Int                  @default(10) // minutes
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@unique([regionId, dish])
+  @@index([regionId])
+  @@index([dish])
+}
+
+model RegionalDishBonus {
+  id             String            @id @default(cuid())
+  regionalDishId String
+  regionalDish   RegionalDish      @relation(fields: [regionalDishId], references: [id])
+  bonusCategory  BonusCategoryType @default(NONE)
+  value          Int               @default(10)
+  mythicBonus    Boolean           @default(false) // if true, only active if dish ingredients all legendary quality
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model RegionalIngredient {
+  id         String               @id @default(cuid())
+  regionId   String
+  region     Region               @relation(fields: [regionId], references: [id])
+  ingredient String // Item.slug
+  rarity     IngredientRarityType @default(COMMON)
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+
+  @@unique([regionId, ingredient])
+}

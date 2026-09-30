@@ -1,0 +1,22 @@
+{
+  "name": "tools",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Tools for the Dreams of Nowhere Else and Beyond application",
+  "author": "Richard Thomas Ryker",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "schema:convert:mysql": "ts-node tools/convert_neon_to_aurora.ts",
+    "schema:diff": "ts-node tools/prisma_schema_diff.ts server/prisma/schema.prisma server/prisma/schema-mysql.prisma",
+    "schema:diff:watch": "nodemon --watch server/prisma --exec \"npm run schema:diff\"",
+    "tools:check": "npm run schema:diff"
+  },
+  "dependencies": {
+    "@types/node": "^25.9.2",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "eslint": "^10.3.0"
+  }
+}

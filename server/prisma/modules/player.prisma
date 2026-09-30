@@ -1,0 +1,562 @@
+// ---------------------------------------
+//  Player Module
+// ---------------------------------------
+
+model Achievement {
+  id                 String              @id @default(cuid())
+  slug               String              @unique
+  name               String
+  description        String?
+  tier               AchievementTier     @default(BRONZE)
+  points             Int                 @default(0) // used for leaderboard
+  category           AchievementCategory @default(COMBAT)
+  requirements       Json? // { kills: { monsterSlug: 'acid-slug', count: 10 }, explore: { areaId: 5 } }
+  // Optional reward hooks
+  titles             Title[] // usually 0, sometimes 1
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  // bi-directional relationships
+  playerAchievements PlayerAchievement[]
+}
+
+enum AchievementCategory {
+  COMBAT
+  CRAFTING
+  EXPLORATION
+  GATHERING
+  MAGIC
+  SOCIAL
+}
+
+enum AchievementTier {
+  BRONZE
+  SILVER
+  GOLD
+}
+
+model BlockedPlayer {
+  id        String @id @default(cuid())
+  blockerId String
+  blockedId String
+
+  blocker Player @relation("Blocker", fields: [blockerId], references: [id])
+  blocked Player @relation("Blocked", fields: [blockedId], references: [id])
+
+  @@unique([blockerId, blockedId])
+  @@index([blockedId])
+}
+
+// consider renaming to Profession?
+model Class {
+  id             String        @id @default(cuid())
+  name           String        @unique
+  description    String?
+  // Core attributes
+  primaryStat    StatType      @default(NONE)
+  secondaryStat  StatType?     @default(NONE)
+  // Class bonuses
+  favoredWeapon  WeaponType    @default(NONE)
+  bonuses        Json? // { critChance: 0.05, dodge: 0.02 }
+  // Growth curves (per level)
+  statGrowth     Json? // { hp: 10, mp: 5, str: 2, int: 1, ... }
+  // Starting ability
+  startingSpells Json? // [spellId, spellId, ...]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  // bi-directional relationships
+  playerClasses  PlayerClass[]
+}
+
+enum GenderType {
+  MALE
+  FEMALE
+  OTHER
+}
+
+model Player {
+  id                 String                  @id @default(cuid())
+  name               String?
+  title              String?
+  gender             GenderType              @default(MALE)
+  stats              PlayerStats?
+  mapId              String?
+  map                Map?                    @relation(fields: [mapId], references: [id])
+  x                  Int                     @default(0)
+  y                  Int                     @default(0)
+  recallLocationId   String?
+  recallLocation     Location?               @relation(fields: [recallLocationId], references: [id])
+  isGhost            Boolean                 @default(false)
+  isInvisible        Boolean                 @default(false)
+  ghostUntil         DateTime?
+  isBanned           Boolean                 @default(false)
+  isDefault          Boolean                 @default(false) // if true, load this player character on login
+  isPaused           Boolean                 @default(false)
+  lastActionAt       DateTime                @default(now())
+  activeCombatId     String?
+  activeCombat       CombatSession?          @relation("ActiveCombat", fields: [activeCombatId], references: [id])
+  weaponMode         WeaponModeType          @default(MELEE)
+  switchedWeapon     Boolean                 @default(false)
+  accountId          String
+  account            Account                 @relation(fields: [accountId], references: [id])
+  avatarId           String?
+  avatar             Avatar?                 @relation(fields: [avatarId], references: [id])
+  hunger             Int                     @default(100)
+  hungerRate         Int                     @default(1)
+  fatigue            Int                     @default(100)
+  fatigueRate        Int                     @default(1)
+  thirst             Int                     @default(100)
+  thirstRate         Int                     @default(1)
+  guilds             GuildMember[]
+  activities         PlayerActivity[]
+  achievements       PlayerAchievement[]
+  classes            PlayerClass[]
+  deaths             PlayerDeath[]
+  effects            PlayerEffect[]
+  equipment          PlayerEquipment[]
+  inventory          InventoryItem[]
+  monsterKills       PlayerMonsterKill[]
+  monsterTypes       PlayerMonsterTypeKill[]
+  nameHistory        PlayerNameHistory[]
+  pets               PlayerPet[]
+  quests             PlayerQuest[]
+  recipes            PlayerRecipe[]
+  roles              PlayerRole[]
+  skills             PlayerSkill[]
+  spells             PlayerSpell[]
+  titles             PlayerTitle[]           @relation("GrantedTitles")
+  variables          PlayerVariable[]
+  colorTheme         Json?
+  customColors       Json?                   @default("[]") // array of { part: "hair" | "skin" | "clothing", color: "#RRGGBB" }
+  messageFilters     Json?                   @default("[]") // array of filter objects { type: "SPAM", pattern: "Buy gold at..." }
+  hotbar             Json                    @default("[]") // array of slots
+  keybinds           Json                    @default("{}") // action -> key
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  // bi-directional relationships
+  auctionBids        AuctionBid[]            @relation("AuctionBidders")
+  auctionItems       Auction[]               @relation("AuctionSeller")
+  combatParticipants CombatParticipant[]     @relation("CombatPlayer")
+  containersOwned    Container[]             @relation("ContainerOwner")
+  guildsFounded      Guild[]                 @relation("GuildFounder")
+  guildLogs          GuildLog[]              @relation("GuildActionBy")
+  receivedMessages   MessageLog[]            @relation("MessageRecipient")
+  sentMessages       MessageLog[]            @relation("MessageSender")
+  moderatedMessages  MessageLog[]            @relation("MessageModerator")
+  moderatedNames     PlayerNameHistory[]     @relation("NameChangeModerator")
+  blockedAccounts    Account[]               @relation("BlockedAccounts")
+  blockedPlayers     BlockedPlayer[]         @relation("Blocker")
+  blockedBy          BlockedPlayer[]         @relation("Blocked")
+  createdAvatars     Avatar[]                @relation("CreatedAvatars")
+  createEvents       Event[]                 @relation("CreatedEvents")
+  createdItems       Item[]                  @relation("CreatedItems")
+  createdMaps        Map[]                   @relation("CreatedMaps")
+  createdQuests      Quest[]                 @relation("CreatedQuests")
+  bannedPlayers      Ban[]                   @relation("Banned")
+  mutedPlayers       Mute[]                  @relation("Muted")
+  tradeFrom          Trade[]                 @relation("TradeFromPlayer")
+  tradeTo            Trade[]                 @relation("TradeToPlayer")
+  eventParticipation EventParticipation[]    @relation("PlayerEventParticipation")
+  heatmapEvents      HeatmapEvent[]
+  sessionLogs        PlayerSessionLog[]
+  marketListings     MarketListing[]
+  tradeItems         TradeItem[]
+
+  @@unique([accountId, name])
+  @@index([accountId])
+  @@index([name])
+  @@index([activeCombatId])
+  @@index([avatarId])
+  @@index([mapId])
+  @@index([recallLocationId])
+  @@index([hunger])
+  @@index([fatigue])
+  @@index([thirst])
+}
+
+model PlayerStats {
+  id               String   @id @default(cuid())
+  playerId         String   @unique
+  player           Player   @relation(fields: [playerId], references: [id])
+  gold             Int      @default(0)
+  experience       Int      @default(0)
+  level            Int      @default(1)
+  strength         Int      @default(1)
+  baseStrength     Int      @default(1)
+  dexterity        Int      @default(1)
+  baseDexterity    Int      @default(1)
+  intelligence     Int      @default(1)
+  baseIntelligence Int      @default(1)
+  charisma         Int      @default(1)
+  baseCharisma     Int      @default(1)
+  hp               Int      @default(1)
+  maxHp            Int      @default(1)
+  mp               Int      @default(0)
+  maxMp            Int      @default(0)
+  critChance       Float    @default(0.0) // additional crit chance, e.g. 0.05 for +5% crit
+  critDamage       Float    @default(1.5) // additional crit damage multiplier, e.g. 0.5 for +50% crit damage (total 200% with base)
+  critResistance   Float    @default(0.0) // percentage crit resistance, e.g. 0.05 for 5% less likely to be crit
+  damageReduction  Float    @default(0) // percentage damage reduction, e.g. 0.1 for 10% DR
+  spellResistance  Float    @default(0) // percentage spell resistance, e.g. 0.1 for 10% SR
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model PlayerAchievement {
+  id            String      @id @default(cuid())
+  playerId      String
+  player        Player      @relation(fields: [playerId], references: [id])
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  earnedAt      DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([playerId, achievementId])
+}
+
+model PlayerActivity {
+  id           String   @id @default(cuid())
+  playerId     String
+  player       Player   @relation(fields: [playerId], references: [id])
+  activityType String // e.g. "ORC_KILL", "RECIPE_CRAFTED", "TREE_CUT"
+  activityData Json // { monsterSlug: "orc", count: 1 } etc.
+  count        Int
+  timestamp    DateTime @default(now())
+
+  @@unique([playerId, activityType])
+  @@index([playerId])
+  @@index([activityType])
+}
+
+model PlayerClass {
+  id         String   @id @default(cuid())
+  playerId   String
+  player     Player   @relation(fields: [playerId], references: [id])
+  classId    String
+  class      Class    @relation(fields: [classId], references: [id])
+  level      Int      @default(0)
+  experience Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([playerId, classId])
+  @@index([playerId])
+  @@index([classId])
+}
+
+model PlayerDeath {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  level     Int      @default(0)
+  killedBy  String
+  mapId     String
+  map       Map      @relation(fields: [mapId], references: [id])
+  x         Int      @default(0)
+  y         Int      @default(0)
+  timestamp DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([playerId])
+  @@index([mapId])
+  @@index([timestamp])
+}
+
+model PlayerEffect {
+  id             String       @id @default(cuid())
+  playerId       String
+  player         Player       @relation(fields: [playerId], references: [id])
+  type           EffectType
+  element        ElementType?
+  magnitude      Int
+  tickIntervalMs Int?
+  nextTickAt     DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([playerId])
+}
+
+model PlayerEquipment {
+  id        String         @id @default(cuid())
+  playerId  String
+  player    Player         @relation(fields: [playerId], references: [id])
+  slotType  SlotType
+  itemId    String?
+  item      InventoryItem? @relation(fields: [itemId], references: [id])
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@unique([playerId, slotType])
+  @@index([playerId])
+  @@index([itemId])
+}
+
+model PlayerMonsterKill {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  monsterId String
+  monster   Monster  @relation(fields: [monsterId], references: [id])
+  count     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([playerId, monsterId])
+  @@index([playerId])
+  @@index([monsterId])
+}
+
+model PlayerMonsterTypeKill {
+  id        String      @id @default(cuid())
+  playerId  String
+  player    Player      @relation(fields: [playerId], references: [id])
+  typeId    String
+  type      MonsterType @relation(fields: [typeId], references: [id])
+  count     Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([playerId, typeId])
+  @@index([playerId])
+  @@index([typeId])
+}
+
+model PlayerNameHistory {
+  id          String     @id @default(cuid())
+  playerId    String
+  player      Player     @relation(fields: [playerId], references: [id])
+  oldName     String
+  newName     String
+  status      StatusType @default(PENDING)
+  moderatorId String?
+  moderator   Player?    @relation("NameChangeModerator", fields: [moderatorId], references: [id])
+  reason      String? // Reason for the change (user request, GM action, profanity filter, etc.)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([playerId])
+}
+
+model PlayerPet {
+  id                 String              @id @default(cuid())
+  name               String
+  playerId           String
+  player             Player              @relation(fields: [playerId], references: [id])
+  typeId             String
+  type               PetType             @relation(fields: [typeId], references: [id])
+  attackType         AttackType          @default(MELEE)
+  tier               Int                 @default(0) // adds to all stats in combat the higher the tier
+  currentHp          Int                 @default(1)
+  hunger             Int                 @default(0)
+  loneliness         Int                 @default(0)
+  isEgg              Boolean             @default(false)
+  isJuvenile         Boolean             @default(false)
+  isSelected         Boolean             @default(false) // only beastmasters can have more than one pet active in combat
+  hatchesAt          DateTime
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  // bi-directional relationships
+  combatParticipants CombatParticipant[] @relation("CombatPet")
+
+  @@index([playerId])
+  @@index([typeId])
+  @@index([isSelected])
+}
+
+// ---------------------------------------
+//  Player Quest Progress
+// ---------------------------------------
+
+model PlayerQuest {
+  id        String                @id @default(cuid())
+  playerId  String
+  player    Player                @relation(fields: [playerId], references: [id])
+  questId   String
+  quest     Quest                 @relation(fields: [questId], references: [id])
+  completed Boolean               @default(false)
+  status    QuestStatusType       @default(NOT_STARTED)
+  variables PlayerQuestVariable[]
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  @@unique([playerId, questId])
+  @@index([playerId])
+  @@index([questId])
+  @@index([status])
+}
+
+model PlayerQuestVariable {
+  id            String      @id @default(cuid())
+  playerQuestId String
+  playerQuest   PlayerQuest @relation(fields: [playerQuestId], references: [id])
+  name          String
+  value         Json
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([playerQuestId, name])
+  @@index([playerQuestId])
+}
+
+model PlayerRecipe {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  recipeId  String
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([playerId, recipeId])
+  @@index([playerId])
+  @@index([recipeId])
+}
+
+model PlayerRole {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([playerId, roleId])
+  @@index([playerId])
+  @@index([roleId])
+}
+
+model PlayerSkill {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  skillId   String
+  skill     Skill    @relation(fields: [skillId], references: [id])
+  level     Int      @default(0)
+  points    Int      @default(0) // 0 to 100K = 100%
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([playerId, skillId])
+  @@index([playerId])
+  @@index([skillId])
+}
+
+model PlayerSpell {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  spellId   String
+  spell     Spell    @relation(fields: [spellId], references: [id])
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([playerId, spellId])
+}
+
+model PlayerTitle {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation("GrantedTitles", fields: [playerId], references: [id])
+  titleId   String
+  title     Title    @relation(fields: [titleId], references: [id])
+  awardedAt DateTime @default(now())
+
+  @@unique([playerId, titleId])
+}
+
+model PlayerVariable {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  key       String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([playerId, key])
+}
+
+model Skill {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  description  String?
+  skillType    SkillType
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  playerSkills PlayerSkill[]
+
+  @@index([skillType])
+}
+
+enum SkillType {
+  ARMOR
+  CRAFTING
+  GATHERING
+  MAGIC
+  SOCIAL
+  WEAPON
+}
+
+enum StatType {
+  NONE
+  STR
+  DEX
+  CON
+  INT
+  WIS
+  CHA
+  SPD
+  HP
+  MP
+  AC
+  DR
+  SR
+  FORT
+  REF
+  WILL
+  TH
+}
+
+model Title {
+  id            String           @id @default(cuid())
+  slug          String           @unique
+  name          String
+  female        String?
+  description   String
+  display       TitleDisplayType @default(PREFIX)
+  isGrantable   Boolean          @default(false)
+  // any requirements to gain?
+  achievementId String?
+  achievement   Achievement?     @relation(fields: [achievementId], references: [id])
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  playerTitles  PlayerTitle[]
+}
+
+enum TitleDisplayType {
+  PREFIX
+  SUFFIX
+}
+
+enum WeaponType {
+  NONE
+  AXES
+  BOWS
+  CLUBS
+  CROSSBOWS
+  HAMMERS
+  HANDS
+  KNIVES
+  PETS
+  SCROLLS
+  SPEARS
+  STAVES
+  SWORDS
+  TOOLS
+  WANDS
+}

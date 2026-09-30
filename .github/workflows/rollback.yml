@@ -1,0 +1,77 @@
+name: Rollback Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: "Environment to rollback"
+        options:
+          - dev
+          - stage
+          - prod
+      version:
+        description: "Version/tag to rollback to"
+        required: true
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.version }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build all packages
+        run: npx tsc -b
+
+      # -------------------------
+      # ROLLBACK UI
+      # -------------------------
+      - name: Rollback UI
+        working-directory: client
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          UI_BUCKET: ${{ secrets.UI_BUCKET }}
+        run: |
+          npm run build
+          aws s3 sync dist s3://$UI_BUCKET --delete
+
+      # -------------------------
+      # ROLLBACK SERVER
+      # -------------------------
+      - name: Rollback server
+        working-directory: server
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: npm run deploy
+
+      # -------------------------
+      # ROLLBACK CDK
+      # -------------------------
+      - name: Install CDK
+        run: npm install -g aws-cdk
+
+      - name: Rollback CDK (via previous synth)
+        working-directory: infrastructure
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CDK_ACCOUNT: ${{ secrets.CDK_ACCOUNT }}
+          CDK_REGION: ${{ secrets.CDK_REGION }}
+        run: |
+          cdk deploy --all --require-approval never
