@@ -57,7 +57,7 @@ export class AuthStack extends Stack {
     makeApiLambda(this, openapi, "openapi", "auth/openapiHandler.ts", "GET");
 
     // Grant secret read to log in + refresh only
-    jwtSecret.grantRead(api.node.findChild("login") as any);
-    jwtSecret.grantRead(api.node.findChild("refresh") as any);
+    jwtSecret.grantRead(this.node.findChild("login") as any);
+    jwtSecret.grantRead(this.node.findChild("refresh") as any);
   }
 }

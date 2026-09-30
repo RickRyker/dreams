@@ -1,0 +1,19 @@
+// infrastructure/tsconfig.cdk.json
+//
+// Used only to execute the CDK app entrypoint via ts-node (see cdk.json's
+// "app" command). infrastructure/package.json has no "type": "module", and
+// aws-cdk's CLI loads this file with a plain require(), so it must be
+// compiled/run as CommonJS regardless of the ESNext/bundler settings used
+// for the regular "tsc -b" build in tsconfig.json (which targets consumers
+// like bundlers that resolve ESM directly).
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "module": "CommonJS",
+    "moduleResolution": "node10",
+    "verbatimModuleSyntax": false,
+    "ignoreDeprecations": "6.0"
+  }
+}

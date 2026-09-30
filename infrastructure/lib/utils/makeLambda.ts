@@ -25,8 +25,8 @@ export function makeLambda({
                            }: MakeLambdaProps) {
   return new lambdaNode.NodejsFunction(scope, name, {
     entry: path.join(__dirname, "../../../server/src", entry),
-    projectRoot: path.join(__dirname, "../../../server"),
-    depsLockFilePath: path.join(__dirname, "../../../server/package-lock.json"),
+    projectRoot: path.join(__dirname, "../../.."),
+    depsLockFilePath: path.join(__dirname, "../../../package-lock.json"),
     runtime: lambda.Runtime.NODEJS_20_X,
     memorySize,
     timeout: Duration.seconds(timeoutSeconds),

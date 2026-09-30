@@ -2,6 +2,7 @@
 /dist
 .d.ts
 .js
+cdk.out/
 
 # Logs
 logs
