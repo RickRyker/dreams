@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 // infrastructure/bin/app.ts
 
 import "source-map-support/register";
