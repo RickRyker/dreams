@@ -1,7 +1,7 @@
 ﻿// server/src/combat/CombatEventBus.ts
 
 
-import { EngineCombatEvent } from "./types/EngineCombatTypes";
+import { EngineCombatEvent, EngineCombatResolution, EngineCombatSnapshot } from "./types/EngineCombatTypes";
 
 type Listener<T extends EngineCombatEvent = EngineCombatEvent> = (event: T) => void;
 
@@ -48,13 +48,14 @@ export class CombatEventBus {
 
   emitCombatEvent(event: EngineCombatEvent): void {
     this.emit(event);
+    this.publish("COMBAT_EVENT", event);
   }
 
-  emitResolution(event: EngineCombatEvent): void {
-    this.emit(event);
+  emitResolution(resolution: EngineCombatResolution): void {
+    this.publish("COMBAT_EVENT_RESOLVED", resolution);
   }
 
-  emitSnapshot(event: EngineCombatEvent): void {
-    this.emit(event);
+  emitSnapshot(snapshot: EngineCombatSnapshot): void {
+    this.publish("SNAPSHOT_CREATED", snapshot);
   }
 }

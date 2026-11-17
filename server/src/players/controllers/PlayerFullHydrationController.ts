@@ -11,12 +11,16 @@ export class PlayerFullHydrationController {
     return Array.isArray(value) ? value[0] : value;
   }
 
-  hydrate = async (req: Request, res: Response, _next?: NextFunction) => {
-    const playerId: string | null = this.getParamAsString(req.params.playerId);
-    if (!playerId) return res.status(403).json({ error: "BAD REQUEST" });
+  hydrate = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const playerId: string | null = this.getParamAsString(req.params.playerId);
+      if (!playerId) return res.status(403).json({ error: "BAD REQUEST" });
 
-    const dto = await this.hydration.hydrate(playerId);
-    res.status(200).json(dto);
+      const dto = await this.hydration.hydrate(playerId);
+      res.status(200).json(dto);
+    } catch (error) {
+      next(error);
+    }
   };
 
   load = this.hydrate;

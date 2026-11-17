@@ -37,13 +37,6 @@ describe("CombatSessionRepository", () => {
       expect(result).toEqual(mockSession);
       expect(mockPrisma.combatSession.findUnique).toHaveBeenCalledWith({
         where: { id: "session1" },
-        include: {
-          participants: true,
-          combatEffects: true,
-          combatLogs: true,
-          combatThreats: true,
-          combatTimelineEvents: true,
-        },
       });
     });
 
@@ -102,4 +95,3 @@ describe("CombatSessionRepository", () => {
     });
   });
 });
-

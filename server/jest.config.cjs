@@ -9,7 +9,8 @@ const config = {
     "^@core/(.*)$": "<rootDir>/src/core/$1",
     "^@email/(.*)$": "<rootDir>/src/email/$1",
     "^@prisma$": "<rootDir>/src/db/client.ts",
-    "^@shared/(.*)$": "<rootDir>/../shared/$1"
+    "^@shared/(.*)$": "<rootDir>/../shared/$1",
+    "^shared$": "<rootDir>/../shared/index.ts"
   }
 };
 

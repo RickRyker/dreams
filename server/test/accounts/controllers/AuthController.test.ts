@@ -18,7 +18,10 @@ describe("AuthController", () => {
 
     await controller.register(req, res, jest.fn());
 
-    expect((mockService.register as jest.Mock).mock.calls[0]).toEqual(["test@example.com", "password123"]);
+    expect((mockService.register as jest.Mock).mock.calls[0]).toEqual([{
+      email: "test@example.com",
+      password: "password123",
+    }]);
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({ id: "acc1", email: "test@example.com" });
   });
@@ -37,7 +40,10 @@ describe("AuthController", () => {
 
     await controller.login(req, res, jest.fn());
 
-    expect((mockService.login as jest.Mock).mock.calls[0]).toEqual(["test@example.com", "password123"]);
+    expect((mockService.login as jest.Mock).mock.calls[0]).toEqual([{
+      email: "test@example.com",
+      password: "password123",
+    }]);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ account: { id: "acc1" }, token: "jwt" });
   });
@@ -62,7 +68,7 @@ describe("AuthController", () => {
     };
 
     const controller = new AuthController(mockService as any);
-    const req: any = { user: { id: "acc1" } };
+    const req: any = { auth: { accountId: "acc1" } };
     const res: any = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -92,4 +98,3 @@ describe("AuthController", () => {
     expect(next).toHaveBeenCalledWith(error);
   });
 });
-

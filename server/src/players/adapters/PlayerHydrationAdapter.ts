@@ -48,7 +48,7 @@ export class PlayerHydrationAdapter {
       inventory: p.inventory ?? [],
       spells: p.spells ?? [],
       skills: p.skills ?? [],
-      quests: [],
+      quests: p.quests ?? [],
     };
   }
 }

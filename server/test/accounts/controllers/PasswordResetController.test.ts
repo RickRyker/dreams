@@ -15,7 +15,7 @@ describe("PasswordResetController", () => {
 
     await controller.requestReset(req, res, jest.fn());
 
-    expect((mockService.requestReset as jest.Mock).mock.calls[0]).toEqual(["test@example.com"]);
+    expect((mockService.requestReset as jest.Mock).mock.calls[0]).toEqual([{ email: "test@example.com" }]);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ ok: true });
   });
@@ -31,7 +31,10 @@ describe("PasswordResetController", () => {
 
     await controller.performReset(req, res, jest.fn());
 
-    expect((mockService.performReset as jest.Mock).mock.calls[0]).toEqual(["token-1", "password123"]);
+    expect((mockService.performReset as jest.Mock).mock.calls[0]).toEqual([{
+      token: "token-1",
+      newPassword: "password123",
+    }]);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ ok: true });
   });
@@ -65,4 +68,3 @@ describe("PasswordResetController", () => {
     expect(next).toHaveBeenCalledWith(error);
   });
 });
-

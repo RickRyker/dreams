@@ -7,7 +7,7 @@ Use this file as the default source of truth for working in this repo. **Trust t
 - Monorepo for **Dreams of Nowhere Else and Beyond** (MMORPG stack).
 - Size (tracked files): **~1337 files**, primarily **TypeScript** (`.ts` dominates), plus Prisma schemas and React TSX.
 - Runtime/tooling:
-  - Node/NPM workspace monorepo (`npm@10.8.2` at root).
+  - Node/NPM workspace monorepo (Node.js `>=26.12.0`, npm `>=12.2.2`).
   - Server: Node + Express + Prisma + PostgreSQL/Neon adapters.
   - Client: React + Vite + Vitest.
   - Shared package: generated DTO/types used by server/client.
@@ -37,7 +37,7 @@ Workflows in `.github/workflows`:
 
 1. `ci-build.yml` (push main + pull_request):  
    `npm install` -> `npx tsc -b` -> `npm run lint --if-present` -> `npm test --if-present`
-2. `prisma-validate.yml` (PR path-filtered): runs in `server/` with Node 20, `npm install`, `npx prisma validate`, and `npx prisma migrate diff`.
+2. `prisma-validate.yml` (PR path-filtered): runs in `server/` with Node.js 26.12.0 and npm 12.2.2, `npm install`, `npx prisma validate`, and `npx prisma migrate diff`.
 3. `schema-diff.yml` (PR path-filtered): `npm install`, `npm run schema:diff`.
 4. Deploy workflows (`deploy-*.yml`, `rollback.yml`) are manual (`workflow_dispatch`) and AWS-secret dependent.
 5. `neon_workflow.yml`: PR open/sync/close Neon branch automation.
@@ -77,7 +77,7 @@ Avoid using failing baseline scripts (`npm run build` at root, `npm run lint` at
 
 ## 7) Environment requirements and preconditions
 
-- Node version target from repo/workflows: **Node 20** (`server/.node-version` = `20`, workflows use node 20).
+- Runtime minimums: **Node.js 26.12.0** (`server/.node-version`) and **npm 12.2.2** (`package.json`).
 - Server runtime requires `DATABASE_URL` (`server/src/config/env.ts` hard-fails if missing).
 - Client env files exist: `client/.env.development`, `.env.test`, `.env.prod`.
 - Infrastructure/deploy commands require AWS credentials/secrets and are not local-default validation steps.

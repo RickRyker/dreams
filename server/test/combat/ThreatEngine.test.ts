@@ -23,7 +23,7 @@ describe("ThreatEngine", () => {
       };
       threatEngine.apply(change);
       const table = threatEngine.getThreatTable("target1");
-      expect(table.attacker1).toBe(50);
+      expect(table.get("attacker1")).toBe(50);
     });
 
     it("accumulates threat from same source", () => {
@@ -42,7 +42,7 @@ describe("ThreatEngine", () => {
       threatEngine.apply(change1);
       threatEngine.apply(change2);
       const table = threatEngine.getThreatTable("target1");
-      expect(table.attacker1).toBe(50);
+      expect(table.get("attacker1")).toBe(50);
     });
 
     it("applies threat modifiers", () => {
@@ -55,7 +55,7 @@ describe("ThreatEngine", () => {
       };
       threatEngine.apply(change);
       const table = threatEngine.getThreatTable("target1");
-      expect(table.tank).toBe(150);
+      expect(table.get("tank")).toBe(150);
     });
 
     it("publishes THREAT_UPDATED event", () => {
@@ -122,7 +122,7 @@ describe("ThreatEngine", () => {
         amount: 100,
       });
       const table = threatEngine.getThreatTable("target1");
-      expect(table.dps).toBe(80);
+      expect(table.get("dps")).toBe(80);
     });
 
     it("updates threat modifier for existing entity", () => {
@@ -135,7 +135,7 @@ describe("ThreatEngine", () => {
         amount: 50,
       });
       const table = threatEngine.getThreatTable("target1");
-      expect(table.entity).toBe(100);
+      expect(table.get("entity")).toBe(100);
     });
   });
 
@@ -149,7 +149,7 @@ describe("ThreatEngine", () => {
       });
       threatEngine.resetThreat("target1");
       const table = threatEngine.getThreatTable("target1");
-      expect(Object.keys(table).length).toBe(0);
+      expect(table.size).toBe(0);
     });
 
     it("publishes THREAT_RESET event", () => {
@@ -170,8 +170,8 @@ describe("ThreatEngine", () => {
       });
       threatEngine.transferThreat("attacker1", "attacker2", "target1", 0.5);
       const table = threatEngine.getThreatTable("target1");
-      expect(table.attacker1).toBe(50);
-      expect(table.attacker2).toBe(50);
+      expect(table.get("attacker1")).toBe(50);
+      expect(table.get("attacker2")).toBe(50);
     });
 
     it("publishes THREAT_TRANSFERRED event", () => {
@@ -201,8 +201,8 @@ describe("ThreatEngine", () => {
       });
       threatEngine.transferThreat("attacker1", "attacker2", "target1", 1.0);
       const table = threatEngine.getThreatTable("target1");
-      expect(table.attacker1).toBe(0);
-      expect(table.attacker2).toBe(100);
+      expect(table.get("attacker1")).toBe(0);
+      expect(table.get("attacker2")).toBe(100);
     });
   });
 
@@ -216,7 +216,7 @@ describe("ThreatEngine", () => {
       });
       threatEngine.decayThreat("target1", 0.3);
       const table = threatEngine.getThreatTable("target1");
-      expect(table.attacker1).toBe(70);
+      expect(table.get("attacker1")).toBe(70);
     });
 
     it("publishes THREAT_DECAYED event", (done) => {
@@ -261,15 +261,15 @@ describe("ThreatEngine", () => {
         amount: 30,
       });
       const table = threatEngine.getThreatTable("target1");
-      expect(table).toEqual({
-        attacker1: 50,
-        attacker2: 30,
-      });
+      expect(table).toEqual(new Map([
+        ["attacker1", 50],
+        ["attacker2", 30],
+      ]));
     });
 
     it("returns empty object for non-existent target", () => {
       const table = threatEngine.getThreatTable("unknown");
-      expect(table).toEqual({});
+      expect(table).toEqual(new Map());
     });
   });
 });

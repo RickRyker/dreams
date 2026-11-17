@@ -2,12 +2,13 @@
 
 
 import {EngineEntityId} from "../types/EngineCombatTypes";
+import {CombatEventBus} from "../CombatEventBus";
 
 export class ThreatEngine {
   private readonly tables: Map<EngineEntityId, Map<EngineEntityId, number>> = new Map<EngineEntityId, Map<EngineEntityId, number>>();
   private readonly modifiers: Map<EngineEntityId, number> = new Map();
 
-  constructor(_eventBus?: unknown) {}
+  constructor(private readonly eventBus?: CombatEventBus) {}
 
   // ----------------------------------------
   // Threat modification
@@ -18,20 +19,26 @@ export class ThreatEngine {
     const table: Map<EngineEntityId, number> = this.getThreatTableFor(event.targetId);
     const current: number = table.get(event.sourceId) ?? 0;
     const modifier = this.modifiers.get(event.sourceId) ?? 1;
-    table.set(event.sourceId, current + event.amount * modifier);
+    const newValue = current + event.amount * modifier;
+    table.set(event.sourceId, newValue);
+    this.eventBus?.publish("THREAT_UPDATED", {
+      targetId: event.targetId,
+      sourceId: event.sourceId,
+      newValue,
+    });
   }
 
   // ----------------------------------------
   // Query
   // ----------------------------------------
-  getThreatTableFor(targetId: EngineEntityId): any {
+  getThreatTableFor(targetId: EngineEntityId): Map<EngineEntityId, number> {
     if (!this.tables.has(targetId)) {
       this.tables.set(targetId, new Map());
     }
     return this.tables.get(targetId)!;
   }
 
-  getThreatTable(targetId: EngineEntityId): any {
+  getThreatTable(targetId: EngineEntityId): Map<EngineEntityId, number> {
     return this.getThreatTableFor(targetId);
   }
 
@@ -69,6 +76,7 @@ export class ThreatEngine {
 
   resetThreat(entityId: EngineEntityId): void {
     this.clearThreatFor(entityId);
+    this.eventBus?.publish("THREAT_RESET", { targetId: entityId });
   }
 
   transferThreat(sourceId: EngineEntityId, targetId: EngineEntityId, threatTargetId: EngineEntityId, ratio: number): void {
@@ -78,13 +86,22 @@ export class ThreatEngine {
     sourceTable.set(sourceId, current - transfer);
     const targetCurrent = sourceTable.get(targetId) ?? 0;
     sourceTable.set(targetId, targetCurrent + transfer);
+    this.eventBus?.publish("THREAT_TRANSFERRED", {
+      targetId: threatTargetId,
+      from: sourceId,
+      to: targetId,
+      amount: transfer,
+    });
   }
 
   decayThreat(targetId: EngineEntityId, ratio: number): void {
-    const table = this.getThreatTableFor(targetId);
+    const table = this.tables.get(targetId);
+    if (!table) return;
+
     for (const [entityId, value] of table.entries()) {
       table.set(entityId, value * (1 - ratio));
     }
+    this.eventBus?.publish("THREAT_DECAYED", { targetId, percent: ratio });
   }
 
   getPrimaryAggro(targetId: EngineEntityId): EngineEntityId | null {

@@ -44,12 +44,11 @@ describe("discoverLayerFiles", () => {
       layerKinds: ["adapters", "controllers", "mappers", "repositories", "routers", "services"],
     });
 
-    expect(files).toContain("ability/AbilityMapper.ts");
-    expect(files).toContain("adapters/CombatEngineAdapter.ts");
+    expect(files).toContain("mappers/EngineCombatEventMapper.ts");
+    expect(files).toContain("CastEngineAdapter.ts");
     expect(files).toContain("controllers/CombatEventController.ts");
     expect(files).toContain("repositories/CombatCastRepository.ts");
-    expect(files).toContain("hotbar/HotbarService.ts");
-    expect(files).toContain("routes/CombatRouter.ts");
+    expect(files).toContain("services/CombatTimelineService.ts");
+    expect(files).toContain("routers/CombatRouter.ts");
   });
 });
-

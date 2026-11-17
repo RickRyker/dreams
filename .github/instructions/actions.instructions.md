@@ -32,8 +32,9 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 26.12.0
           cache: npm
+      - run: npm install --global npm@12.2.2
       - run: npm ci
       - run: npm test
 ```

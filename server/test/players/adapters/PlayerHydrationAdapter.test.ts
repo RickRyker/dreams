@@ -7,7 +7,10 @@ jest.mock("../../../src/players/mappers/PlayerMapper", () => ({
 }));
 
 jest.mock("../../../src/players/mappers/PlayerStatsMapper", () => ({
-  PlayerStatsMapper: { fromPrisma: jest.fn(() => ({ hp: 10 })) },
+  PlayerStatsMapper: {
+    fromPrisma: jest.fn(() => ({ hp: 10 })),
+    toDto: jest.fn(() => ({ hp: 10 })),
+  },
 }));
 
 jest.mock("../../../src/players/mappers/PlayerEquipmentMapper", () => ({
@@ -45,6 +48,7 @@ describe("PlayerHydrationAdapter", () => {
       findFullPlayer: jest.fn(async () => ({
         id: "p1",
         name: "Hero",
+        mapId: "map1",
         stats: {},
         equipment: [{ id: "e1" }],
         inventory: [{ id: "i1" }],
@@ -52,6 +56,7 @@ describe("PlayerHydrationAdapter", () => {
         skills: [{ id: "sk1" }],
         quests: [{ id: "q1" }],
       })),
+      findTutorialSpawn: jest.fn(async () => null),
     };
 
     const adapter = new PlayerHydrationAdapter(repo as any);
@@ -66,4 +71,3 @@ describe("PlayerHydrationAdapter", () => {
     expect(dto.quests).toEqual([{ id: "q1" }]);
   });
 });
-

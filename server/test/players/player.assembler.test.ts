@@ -39,6 +39,10 @@ describe("PlayerAssembler", () => {
       inventory: [],
       spells: [],
       skills: [],
+      pets: [],
+      messages: [],
+      journal: [],
+      achievements: [],
       quests: [],
     });
   });

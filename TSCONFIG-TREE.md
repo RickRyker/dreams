@@ -189,4 +189,4 @@ This monorepo uses a clean, modern TS6+/TS7 project‑reference architecture:
 - Each workspace has a dedicated build config
 - Tooling configs (Vite, Vitest, Jest) are isolated
 - No deprecated TS options
-- Fully compatible with Node 20, Vite, Vitest, Jest, CDK v2, and Prisma
+- Fully compatible with Node 26.12.0+, Vite, Vitest, Jest, CDK v2, and Prisma

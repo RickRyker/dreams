@@ -7,7 +7,7 @@ describe("PlayerListController", () => {
   it("list returns 200 with list", async () => {
     const service = { list: jest.fn(async () => [{ id: "p1" }]) };
     const controller = new PlayerListController(service as any);
-    const req: any = { params: { accountId: "acc1" } };
+    const req: any = { auth: { accountId: "acc1" } };
     const res: any = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
     await controller.list(req, res, jest.fn());
@@ -16,14 +16,13 @@ describe("PlayerListController", () => {
     expect(res.json).toHaveBeenCalledWith([{ id: "p1" }]);
   });
 
-  it("list returns 403 when accountId missing", async () => {
+  it("list returns 401 when accountId missing", async () => {
     const controller = new PlayerListController({} as any);
     const req: any = { params: {} };
     const res: any = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
     await controller.list(req, res, jest.fn());
 
-    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.status).toHaveBeenCalledWith(401);
   });
 });
-

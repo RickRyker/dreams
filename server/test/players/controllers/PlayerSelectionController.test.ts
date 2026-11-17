@@ -11,7 +11,7 @@ describe("PlayerSelectionController", () => {
 
     const controller = new PlayerSelectionController(mockService as any);
 
-    const req: any = { user: { id: "acc1" } };
+    const req: any = { auth: { accountId: "acc1" } };
     const res: any = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -26,7 +26,7 @@ describe("PlayerSelectionController", () => {
   it("returns 401 when unauthenticated", async () => {
     const controller = new PlayerSelectionController({} as any);
 
-    const req: any = { user: undefined };
+    const req: any = { auth: undefined };
     const res: any = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),

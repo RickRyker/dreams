@@ -67,7 +67,13 @@ export class CastEngine {
   startCast(req: CastRequest | CastDefinition): void {
     if ("castTime" in req) {
       this.activeCasts.set(req.sourceId, req);
-      this.timeline.schedule?.(() => void 0, req.completeAt);
+      this.timeline.schedule({
+        type: "CAST_COMPLETE",
+        timestamp: req.completeAt,
+        sourceId: req.sourceId,
+        abilityId: req.abilityId,
+        targetId: req.targetId,
+      });
       this.bus.publish("CAST_STARTED", req);
       return;
     }

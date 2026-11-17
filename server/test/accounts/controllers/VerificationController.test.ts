@@ -21,12 +21,15 @@ describe("VerificationController", () => {
     };
 
     const controller = new VerificationController(mockService as any);
-    const req: any = { user: { id: "acc1" }, body: { email: "test@example.com" } };
+    const req: any = { auth: { accountId: "acc1" }, body: { email: "test@example.com" } };
     const res: any = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
     await controller.requestVerification(req, res, jest.fn());
 
-    expect((mockService.createVerificationToken as jest.Mock).mock.calls[0]).toEqual(["acc1", "test@example.com"]);
+    expect((mockService.createVerificationToken as jest.Mock).mock.calls[0]).toEqual([{
+      accountId: "acc1",
+      email: "test@example.com",
+    }]);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ ok: true });
   });
@@ -67,7 +70,7 @@ describe("VerificationController", () => {
     };
 
     const controller = new VerificationController(mockService as any);
-    const req: any = { user: { id: "acc1" }, body: { email: "test@example.com" } };
+    const req: any = { auth: { accountId: "acc1" }, body: { email: "test@example.com" } };
     const res: any = { status: jest.fn().mockReturnThis(), json: jest.fn() };
     const next = jest.fn();
 
@@ -76,5 +79,4 @@ describe("VerificationController", () => {
     expect(next).toHaveBeenCalledWith(error);
   });
 });
-
 

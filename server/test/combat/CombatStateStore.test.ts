@@ -46,9 +46,9 @@ describe("CombatStateStore", () => {
       expect(entity?.maxHp).toBe(200);
     });
 
-    it("returns undefined if entity does not exist", () => {
+    it("returns null if entity does not exist", () => {
       const entity = stateStore.getEntity("unknown");
-      expect(entity).toBeUndefined();
+      expect(entity).toBeNull();
     });
   });
 
@@ -163,6 +163,5 @@ describe("CombatStateStore", () => {
     });
   });
 });
-
 
 

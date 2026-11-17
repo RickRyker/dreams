@@ -5,9 +5,15 @@ import { EngineCombatEvent } from "./types/EngineCombatTypes";
 
 export class CombatTimeline {
   private events: Array<{ event: EngineCombatEvent; at: number }> = [];
-  schedule: (event: unknown, at?: number) => void = () => void 0;
 
   constructor(_tickMs = 0) {}
+
+  schedule(event: EngineCombatEvent): void {
+    if (!Number.isFinite(event.timestamp)) {
+      throw new Error("INVALID_EVENT_TIMESTAMP");
+    }
+    this.scheduleEvent(event, event.timestamp);
+  }
 
   add(event: EngineCombatEvent): void {
     this.events.push({ event, at: 0 });

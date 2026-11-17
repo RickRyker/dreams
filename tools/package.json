@@ -13,10 +13,10 @@
     "tools:check": "npm run schema:diff"
   },
   "dependencies": {
-    "@types/node": "^25.9.2",
+    "@types/node": "^25.9.9",
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "eslint": "^10.3.0"
+    "eslint": "^10.15.0"
   }
 }
