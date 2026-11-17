@@ -8,8 +8,8 @@ on:
         description: "Environment to deploy"
         options:
           - dev
-          - stage
-          - prod
+          - test
+          - production
 
 jobs:
   deploy:
@@ -17,9 +17,9 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 26.12.0
           cache: "npm"
@@ -33,7 +33,7 @@ jobs:
       - name: Generate Prisma client
         working-directory: server
         env:
-          DATABASE_URL: postgresql://localhost:5432/dreams
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma generate
 
       - name: Build all packages
